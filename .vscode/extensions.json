@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.debugpy",
+    "ms-python.vscode-pylance",
+    "aaron-bond.better-comments",
+    "tamasfe.even-better-toml",
+    "google.geminicodeassist",
+    "ms-azuretools.vscode-docker",
+    "ms-toolsai.jupyter",
+    "pomdtr.excalidraw-editor",
+    "charliermarsh.ruff",
+    "github.vscode-github-actions",
+    "davidanson.vscode-markdownlint",
+    "yzhang.markdown-all-in-one",
+    "mechatroner.rainbow-csv",
+    "eamodio.gitlens"
+  ]
+}

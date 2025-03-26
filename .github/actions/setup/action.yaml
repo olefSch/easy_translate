@@ -1,0 +1,9 @@
+name: "UV Install"
+description: "For having the same version of uv for all worklfow steps"
+runs:
+  using: composite
+  steps:
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: "latest"
