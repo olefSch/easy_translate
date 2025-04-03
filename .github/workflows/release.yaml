@@ -1,0 +1,13 @@
+name: Release Pipeline coming...
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  always-true:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo True
+        run: echo "true"

@@ -1,6 +1,18 @@
+# venvs
 .venv
+.testenv
+
+# cache
 __pycache__/
 .pytest_cache
 .python-version
 .ruff_cache
+
+# packages
+uv.lock
+*egg-info
+build
+
+# testing
+test.py
 notebooks
