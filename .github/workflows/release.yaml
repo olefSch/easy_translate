@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/release_pipeline
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+a[0-9]+"
@@ -28,7 +29,7 @@ jobs:
             TAG_NAME=${GITHUB_REF#refs/tags/}
             NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
             echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
-            echon "new_version=$NEW_VERSION" >> "$GITHUB_ENV"
+            echo "new_version=$NEW_VERSION" >> "$GITHUB_ENV"
             echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
             echo "Version is $NEW_VERSION"
             echo "Tag name is $TAG_NAME"
