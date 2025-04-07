@@ -80,6 +80,7 @@ jobs:
 
   build_and_publish:
     name: Build and Publish
+    needs: [details, check_pypi]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -93,7 +94,7 @@ jobs:
 
   github_release:
     name: Create GitHub Release
-    needs: [details, build_and_publish]
+    needs: [details, check_pypi, build_and_publish]
     runs-on: ubuntu-latest
     permissions:
       contents: write
