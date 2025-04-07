@@ -29,7 +29,6 @@ jobs:
             TAG_NAME=${GITHUB_REF#refs/tags/}
             NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
             echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
-            echo "new_version=$NEW_VERSION" >> "$GITHUB_ENV"
             echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
             echo "Version is $NEW_VERSION"
             echo "Tag name is $TAG_NAME"
@@ -43,19 +42,21 @@ jobs:
           PACKAGE_NAME=$(uv run toml get --toml-path=pyproject.toml project.name)
           echo "Package name is $PACKAGE_NAME"
           echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+  check_pypi:
+    needs: details
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
       - name: TOML Values
         id: toml
         run: |
           VERSION=$(uv run toml get --toml-path=pyproject.toml project.version)
           echo "Version is $VERSION"
-          if [ "$VERSION" != "$NEW_VERSION" ]; then
+          if [ "$VERSION" != "${{ needs.details.outputs.new_version }}" ]; then
             echo "Version in pyproject.toml does not match the tag version."
             exit 1
           fi
-  check_pypi:
-    needs: details
-    runs-on: ubuntu-latest
-    steps:
       - name: Fetch information from PyPI
         run: |
           response=$(curl -s https://pypi.org/pypi/${{ needs.details.outputs.package_name }}/json || echo "{}")
