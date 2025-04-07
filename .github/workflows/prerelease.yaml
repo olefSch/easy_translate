@@ -1,9 +1,7 @@
-name: release
+name: prerelease
 
 on:
   push:
-    branches:
-      - main
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+a[0-9]+"
@@ -16,7 +14,6 @@ jobs:
     outputs:
       new_version: ${{ steps.release.outputs.new_version }}
       package_name: ${{ steps.release.outputs.package_name }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
@@ -29,9 +26,7 @@ jobs:
             NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
             echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
             echon "new_version=$NEW_VERSION" >> "$GITHUB_ENV"
-            echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
             echo "Version is $NEW_VERSION"
-            echo "Tag name is $TAG_NAME"
           else
             echo "No tag found"
             exit 1
@@ -76,42 +71,3 @@ jobs:
           else
             echo "The new version $NEW_VERSION is greater than the latest version $LATEST_VERSION on PyPI."
           fi
-
-  build_and_publish:
-    name: Build and Publish
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-
-      - name: Build Python Package
-        run: uv build
-
-      - name: Publish to pypi
-        run: uv publish --index testpypi
-
-  github_release:
-    name: Create GitHub Release
-    needs: [details, build_and_publish]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      - name: Create GitHub Release
-        id: create_release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG_NAME: ${{ needs.details.outputs.tag_name }}
-        run: |
-          gh release create "$TAG_NAME" dist/* --title "$TAG_NAME" --generate-notes

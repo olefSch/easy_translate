@@ -1,6 +1,7 @@
-# venvs
+# envirnomnt
 .venv
 .testenv
+.env
 
 # cache
 __pycache__/
