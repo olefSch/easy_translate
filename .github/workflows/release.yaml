@@ -51,7 +51,6 @@ jobs:
       - name:
         id: package_name
         run: |
-          uv lock
           PACKAGE_NAME=$(uv run toml get --toml-path=pyproject.toml project.name)
           echo "Package name is $PACKAGE_NAME"
           echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
@@ -64,7 +63,6 @@ jobs:
       - name: TOML Values
         id: toml
         run: |
-          uv lock
           VERSION=$(uv run toml get --toml-path=pyproject.toml project.version)
           echo "Version is $VERSION"
           if [ "$VERSION" != "${{ needs.details.outputs.new_version }}" ]; then
@@ -104,9 +102,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-
-      - name: Lock
-        run: uv lock
 
       - name: Build Python Package
         run: uv build
