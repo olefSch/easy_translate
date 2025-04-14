@@ -1,53 +1,53 @@
 name: release
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: Release Tag
-        required: true
-        default: dry-run
-        type: string
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+a[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+b[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
 
 env:
   PACKAGE_NAME: "easy-nlp-translate"
 
 jobs:
+  check_branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if on main branch
+        run: |
+          if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
+            echo "Not running on the main branch. Exiting."
+          #  exit 1
+          fi
+          echo "Running on the main branch."
+
   details:
     runs-on: ubuntu-latest
+    needs: check_branch
     outputs:
       new_version: ${{ steps.release.outputs.new_version }}
-      suffix: ${{ steps.release.outputs.suffix }}
+      package_name: ${{ steps.release.outputs.package_name }}
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
 
-      - name: Validate Tag Input
-        id: validate_tag
-        run: |
-          TAG_INPUT="${{ github.event.inputs.tag }}"
-          VALID_TAG_REGEX='^[0-9]+\.[0-9]+\.[0-9]+$|^[0-9]+\.[0-9]+\.[0-9]+a[0-9]+$|^[0-9]+\.[0-9]+\.[0-9]+b[0-9]+$|^[0-9]+\.[0-9]+\.[0-9]+rc[0-9]+$'
-
-          if [[ "$TAG_INPUT" =~ $VALID_TAG_REGEX ]]; then
-            echo "Tag '$TAG_INPUT' is valid."
-            echo "is_valid=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "Error: Tag '$TAG_INPUT' does not match the required pattern."
-            echo "is_valid=false" >> "$GITHUB_OUTPUT"
-            exit 1
-          fi
-
       - name: Extract tag and Details
         id: release
-        if: steps.validate_tag.outputs.is_valid == 'true'
         run: |
-          TAG_NAME="${{ github.event.inputs.tag }}"
-          NEW_VERSION=$(echo "$TAG_NAME" | awk -F'-' '{print $1}')
-          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
-          echo "Version is $NEW_VERSION"
-          echo "Tag name is $TAG_NAME"
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
+            echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+            echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+            echo "Version is $NEW_VERSION"
+            echo "Tag name is $TAG_NAME"
+          else
+            echo "No tag found"
+            exit 1
+          fi
       - name:
         id: package_name
         run: |
