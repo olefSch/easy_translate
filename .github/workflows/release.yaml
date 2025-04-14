@@ -2,9 +2,6 @@ name: release
 
 on:
   push:
-    branches:
-      - main
-      - feature/release_pipeline
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+a[0-9]+"
@@ -15,8 +12,20 @@ env:
   PACKAGE_NAME: "easy-nlp-translate"
 
 jobs:
+  check_branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if on main branch
+        run: |
+          if [[ "${{ github.ref }}" != "refs/heads/feature/release_pipeline" ]]; then
+            echo "Not running on the main branch. Exiting."
+            exit 1
+          fi
+          echo "Running on the main branch."
+
   details:
     runs-on: ubuntu-latest
+    needs: check_branch
     outputs:
       new_version: ${{ steps.release.outputs.new_version }}
       package_name: ${{ steps.release.outputs.package_name }}
