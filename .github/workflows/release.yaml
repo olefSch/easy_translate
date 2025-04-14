@@ -114,6 +114,12 @@ jobs:
       - name: Publish to pypi
         run: uv publish --index testpypi
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist/
+
   github_release:
     name: Create GitHub Release
     needs: [details, check_pypi, build_and_publish]
