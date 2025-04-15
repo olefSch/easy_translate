@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.release.outputs.new_version }}
-      package_name: ${{ steps.release.outputs.package_name }}
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v2
@@ -36,13 +35,6 @@ jobs:
             echo "No tag found"
             exit 1
           fi
-      - name:
-        id: package_name
-        run: |
-          PACKAGE_NAME=$(uv run toml get --toml-path=pyproject.toml project.name)
-          echo "Package name is $PACKAGE_NAME"
-          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
-
   on-main-branch-check:
     runs-on: ubuntu-latest
     outputs:
