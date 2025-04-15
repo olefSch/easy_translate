@@ -18,6 +18,7 @@ jobs:
       - name: Check if on main branch
         run: |
           if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
+            echo "${{ github.ref }}"
             echo "Not running on the main branch. Exiting."
             exit 1
           fi
