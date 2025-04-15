@@ -60,7 +60,7 @@ jobs:
         run: |
           echo "Tag: ${{ github.ref }}"
           echo "Result: ${{ steps.contains_tag.outputs.retval }}"
-          if [[ ${{ steps.contains_tag.outputs.retval }} != 'true' ]]; then
+          if [[ ${{ steps.contains_tag.outputs.retval }} == 'true' ]]; then
             echo "Branch/commit did contain the tag."
           else
             echo "Branch/commit did not contain the tag."
