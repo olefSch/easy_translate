@@ -47,6 +47,7 @@ jobs:
     needs: details
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Check if in main
         run: |
           WITH_TAG=$(git branch --contains "tags/${{ needs.details.outputs.new_version }}")
