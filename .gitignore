@@ -18,3 +18,4 @@ build
 test.py
 notebooks
 test.sh
+*.ipynb
