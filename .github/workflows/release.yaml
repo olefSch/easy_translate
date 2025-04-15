@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.release.outputs.new_version }}
-      package_name: ${{ steps.release.outputs.package_name }}
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v2
@@ -36,30 +35,32 @@ jobs:
             echo "No tag found"
             exit 1
           fi
-      - name:
-        id: package_name
-        run: |
-          PACKAGE_NAME=$(uv run toml get --toml-path=pyproject.toml project.name)
-          echo "Package name is $PACKAGE_NAME"
-          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
-
-  check_if_in_main:
-    needs: details
+  on-main-branch-check:
     runs-on: ubuntu-latest
+    outputs:
+      on_main: ${{ steps.contains_tag.outputs.retval }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Check if in main
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: rickstaa/action-contains-tag@v1
+        id: contains_tag
+        with:
+          reference: "main"
+          tag: "${{ github.ref }}"
+      - name: Check if tag is present
         run: |
-          WITH_TAG=$(git branch --contains "tags/${{ needs.details.outputs.new_version }}")
-          if [[ "$WITH_TAG" == *"main"* ]]; then
-            echo "The tag is atteched ti main branch."
+          echo "Tag: ${{ github.ref }}"
+          echo "Result: ${{ steps.contains_tag.outputs.retval }}"
+          if [[ ${{ steps.contains_tag.outputs.retval }} == 'true' ]]; then
+            echo "Branch/commit did contain the tag."
           else
-            echo "The tag is not attached to main branch."
+            echo "Branch/commit did not contain the tag."
             exit 1
           fi
 
   check_pypi:
-    needs: [check_if_in_main, details]
+    needs: [on-main-branch-check, details]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
