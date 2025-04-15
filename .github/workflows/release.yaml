@@ -12,17 +12,31 @@ env:
   PACKAGE_NAME: "easy-nlp-translate"
 
 jobs:
-  check_branch:
+  check_tag_branch:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if on main branch
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Check Tag on Main
+        id: check_tag
         run: |
-          if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
-            echo "${{ github.ref }}"
-            echo "Not running on the main branch. Exiting."
-            exit 1
+          TAG_NAME="${{ github.ref }}"
+          MAIN_BRANCH="refs/heads/main"
+
+          # Get the commit SHA of the tag
+          TAG_COMMIT=$(git rev-parse "$TAG_NAME")
+
+          # Check if the main branch contains the tagged commit
+          if git branch --contains "$TAG_COMMIT" "$MAIN_BRANCH"; then
+            echo "::set-output name=on_main::true"
+            echo "Tag '$TAG_NAME' points to a commit on main."
+          else
+            echo "::set-output name=on_main::false"
+            echo "Tag '$TAG_NAME' does NOT point to a commit on main."
+            exit 1 # Or handle as appropriate
           fi
-          echo "Running on the main branch."
 
   details:
     runs-on: ubuntu-latest
