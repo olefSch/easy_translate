@@ -12,35 +12,8 @@ env:
   PACKAGE_NAME: "easy-nlp-translate"
 
 jobs:
-  check_branch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Check Tag on Main
-        id: check_tag
-        run: |
-          TAG_NAME="${{ github.ref }}"
-          MAIN_BRANCH="refs/heads/main"
-
-          # Get the commit SHA of the tag
-          TAG_COMMIT=$(git rev-parse "$TAG_NAME")
-
-          # Check if the main branch contains the tagged commit
-          if git branch --contains "$TAG_COMMIT" "$MAIN_BRANCH"; then
-            echo "::set-output name=on_main::true"
-            echo "Tag '$TAG_NAME' points to a commit on main."
-          else
-            echo "::set-output name=on_main::false"
-            echo "Tag '$TAG_NAME' does NOT point to a commit on main."
-            exit 1 # Or handle as appropriate
-          fi
-
   details:
     runs-on: ubuntu-latest
-    needs: check_branch
     outputs:
       new_version: ${{ steps.release.outputs.new_version }}
       package_name: ${{ steps.release.outputs.package_name }}
@@ -69,8 +42,23 @@ jobs:
           PACKAGE_NAME=$(uv run toml get --toml-path=pyproject.toml project.name)
           echo "Package name is $PACKAGE_NAME"
           echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
-  check_pypi:
+
+  check_if_in_main:
     needs: details
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if in main
+        run: |
+          WITH_TAG=$(git branch --contains "tags/${{ needs.details.outputs.new_version }}")
+          if [[ "$WITH_TAG" == *"main"* ]]; then
+            echo "The tag is atteched ti main branch."
+          else
+            echo "The tag is not attached to main branch."
+            exit 1
+          fi
+
+  check_pypi:
+    needs: [check_if_in_main, details]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
