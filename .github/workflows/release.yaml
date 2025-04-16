@@ -35,24 +35,16 @@ jobs:
             echo "No tag found"
             exit 1
           fi
-  on-main-branch-check:
+  compare-main-and-tag:
     runs-on: ubuntu-latest
-    outputs:
-      on_main: ${{ steps.contains_tag.outputs.retval }}
+    needs: details
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: rickstaa/action-contains-tag@v1
-        id: contains_tag
-        with:
-          reference: "main"
-          tag: "${{ github.ref }}"
-      - name: Check if tag is present
+      - name: Compare main and tag
         run: |
-          echo "Tag: ${{ github.ref }}"
-          echo "Result: ${{ steps.contains_tag.outputs.retval }}"
-          if [[ ${{ steps.contains_tag.outputs.retval }} == 'true' ]]; then
+          if [[ "$(git rev-parse origin/main)" == "$(git rev-parse tags/${{ needs.details.outputs.new_version }}~0)" ]]; then
             echo "Branch/commit did contain the tag."
           else
             echo "Branch/commit did not contain the tag."
@@ -60,7 +52,7 @@ jobs:
           fi
 
   check_pypi:
-    needs: [on-main-branch-check, details]
+    needs: [compare-main-and-tag, details]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
