@@ -1,0 +1,153 @@
+language_mappings:
+  cs-en:
+    nllb:
+      source: ces_Latn
+      target: eng_Latn
+    m2m100:
+      source: cs
+      target: en
+    mbart50:
+      source: cs_CZ
+      target: en_XX
+    marian:
+      source: cs
+      target: en
+    t5:
+      source: Czech
+      target: English
+
+  de-en:
+    nllb:
+      source: deu_Latn
+      target: eng_Latn
+    m2m100:
+      source: de
+      target: en
+    mbart50:
+      source: de_DE
+      target: en_XX
+    marian:
+      source: de
+      target: en
+    t5:
+      source: German
+      target: English
+
+  fi-en:
+    nllb:
+      source: fin_Latn
+      target: eng_Latn
+    m2m100:
+      source: fi
+      target: en
+    mbart50:
+      source: fi_FI
+      target: en_XX
+    marian:
+      source: fi
+      target: en
+    t5:
+      source: Finnish
+      target: English
+
+  fr-de:
+    nllb:
+      source: fra_Latn
+      target: deu_Latn
+    m2m100:
+      source: fr
+      target: de
+    mbart50:
+      source: fr_XX
+      target: de_DE
+    marian:
+      source: fr
+      target: de
+    t5:
+      source: French
+      target: German
+
+  gu-en:
+    nllb:
+      source: guj_Gujr
+      target: eng_Latn
+    m2m100:
+      source: gu
+      target: en
+    mbart50:
+      source: gu_IN
+      target: en_XX
+    marian:
+      source: 
+      target:
+    t5:
+      source: Gujarati
+      target: English
+
+  kk-en:
+    nllb:
+      source: kaz_Cyrl
+      target: eng_Latn
+    m2m100:
+      source: kk
+      target: en
+    mbart50:
+      source: kk_KZ
+      target: en_XX
+    marian:
+      source: 
+      target: 
+    t5:
+      source: Kazakh
+      target: English
+
+  lt-en:
+    nllb:
+      source: lit_Latn
+      target: eng_Latn
+    m2m100:
+      source: lt
+      target: en
+    mbart50:
+      source: lt_LT
+      target: en_XX
+    marian:
+      source: 
+      target: 
+    t5:
+      source: Lithuanian
+      target: English
+
+  ru-en:
+    nllb:
+      source: rus_Cyrl
+      target: eng_Latn
+    m2m100:
+      source: ru
+      target: en
+    mbart50:
+      source: ru_RU
+      target: en_XX
+    marian:
+      source: ru
+      target: en
+    t5:
+      source: Russian
+      target: English
+
+  zh-en:
+    nllb:
+      source: zho_Hans
+      target: eng_Latn
+    m2m100:
+      source: zh
+      target: en
+    mbart50:
+      source: zh_CN
+      target: en_XX
+    marian:
+      source: zh
+      target: en
+    t5:
+      source: Chinese
+      target: English
