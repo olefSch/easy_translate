@@ -32,7 +32,7 @@ def main():
 
             # Load dataset
             try:
-                dataset = load_dataset("wmt19", lang_pair, split="train[:5]")
+                dataset = load_dataset("wmt19", lang_pair, split="train[:10000]")
                 source_sentences = [ex['translation'][source_lang] for ex in dataset]
                 target_sentences = [ex['translation'][target_lang] for ex in dataset]
             except Exception as e:
