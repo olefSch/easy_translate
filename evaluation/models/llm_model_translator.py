@@ -10,6 +10,8 @@ class LLMTranslator(BaseTranslator):
         self,
         model_name: str = "llama3.1:8b",
         num_predict: int = 256,
+        source_lang: str = "English",
+        target_lang: str = "German",
         stop: list[str] | None = None
     ):
         """
@@ -22,17 +24,21 @@ class LLMTranslator(BaseTranslator):
         self.model_name  = model_name
         self.num_predict = num_predict
         self.stop        = stop or ["—"]
+        self.source_lang = source_lang
+        self.target_lang = target_lang
 
     def translate(
         self,
         text: str,
-        source_lang: str = "English",
-        target_lang: str = "German"
     ) -> str:
         """
         Translate the given text using a local Ollama LLM model.
         """
-        prompt = f"Translate {source_lang} to {target_lang}:\n\n{text}\n\n—"
+        prompt = (
+            f"Translate the following sentence from {self.source_lang} to {self.target_lang}:\n\n"
+            f"{text}\n\n"
+            "Return ONLY the translated sentence—no quotes, labels, explanations or extra whitespace."
+        )
         response = self.client.generate(
             model=self.model_name,
             prompt=prompt,

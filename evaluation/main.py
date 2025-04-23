@@ -1,19 +1,11 @@
 from models import *
 from translation_evaluator import TranslationEvaluator
 from datasets import load_dataset
+from configs.config import MODEL_REGISTRY
 import yaml
 
-def get_model_class(model_name):
-    return {
-        "nllb": NllbTranslator,
-        "m2m100": M2M100Translator,
-        "mbart50": MBartTranslator,
-        "marian": MarianTranslator,
-        "t5": T5Translator
-    }.get(model_name)
-
 def main():
-    models_to_evaluate = ["m2m100", "marian", "t5", "m2m100", "nllb", "mbart50"]
+    models_to_evaluate = ["mistral", "m2m100", "marian", "t5", "nllb", "mbart50", "llama3.1", "llama3.2", "gemma", "phi3"]
 
     # Load language mappings
     with open("configs/language_mappings.yaml", 'r') as f:
@@ -22,7 +14,7 @@ def main():
     evaluator = TranslationEvaluator()
 
     for model_name in models_to_evaluate:
-        translator_class = get_model_class(model_name)
+        translator_class = MODEL_REGISTRY.get(model_name)
         if not translator_class:
             print(f"⚠️ Skipping unknown model: {model_name}")
             continue
@@ -40,7 +32,7 @@ def main():
 
             # Load dataset
             try:
-                dataset = load_dataset("wmt19", lang_pair, split="train[:2]")
+                dataset = load_dataset("wmt19", lang_pair, split="train[:5]")
                 source_sentences = [ex['translation'][source_lang] for ex in dataset]
                 target_sentences = [ex['translation'][target_lang] for ex in dataset]
             except Exception as e:
