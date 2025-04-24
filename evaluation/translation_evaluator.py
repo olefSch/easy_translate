@@ -45,6 +45,8 @@ class TranslationEvaluator:
             model_name (str): Identifier for the model (e.g., "LocalLLM_v1").
             model_instance (BaseTranslator): Instance of a class implementing
                 the BaseTranslator interface.
+        Returns:
+            None.
         """
         if model_name in self.registered_models:
             logger.warning(f"Model '{model_name}' is already registered. Overwriting.")
@@ -56,7 +58,6 @@ class TranslationEvaluator:
         input_texts: List[str], 
         reference_texts: List[str],
         model_list: List[str],
-        metrics: List[str] = None,
     ) -> Dict[str, Dict[str, float]]:
         """
         Evaluate all registered models on the given input and reference texts.
@@ -76,12 +77,9 @@ class TranslationEvaluator:
                     "LocalLLM_v2": {"bleu": 0.44, "meteor": 0.61}
                 }
         """
-        if metrics is None:
-            metrics = ["bleu", "meteor"]
 
         if model_list is None:
             model_list = list(self.registered_models.keys())
-
 
         logger.info("Starting evaluation...")
         start_time = time.time()
@@ -90,31 +88,26 @@ class TranslationEvaluator:
             model = self.registered_models[model_name]
             logger.info(f"Evaluating model '{model_name}'...")
             translations = self._generate_translations(model, input_texts)
-
             results = {}
-            if "bleu" in metrics:
 
-                formatted_references = [[ref] for ref in reference_texts]
+            formatted_references = [[ref] for ref in reference_texts]
 
-                bleu_result = self.bleu_metric.compute(
-                    predictions=translations, 
-                    references=formatted_references
-                )
-                results["bleu"] = bleu_result["bleu"]
+            bleu_result = self.bleu_metric.compute(
+                predictions=translations, 
+                references=formatted_references
+            )
+            results["bleu"] = bleu_result["bleu"]
 
-            if "meteor" in metrics:
-
-                formatted_references = [[ref] for ref in reference_texts]
-
-                meteor_result = self.meteor_metric.compute(
-                    predictions=translations,
-                    references=formatted_references
-                )
-                results["meteor"] = meteor_result["meteor"]
+            meteor_result = self.meteor_metric.compute(
+                predictions=translations,
+                references=formatted_references
+            )
+            results["meteor"] = meteor_result["meteor"]
 
             self.evaluation_results[model_name] = results
 
         logger.info(f"Evaluation completed in {time.time() - start_time:.2f} seconds.")
+
         return self.evaluation_results
     
     def _generate_translations(self, model: BaseTranslator, input_texts: List[str]) -> List[str]:
@@ -132,6 +125,7 @@ class TranslationEvaluator:
         for text in input_texts:
             translation = model.translate(text)
             translations.append(translation)
+
         return translations
 
     def generate_report(self) -> None:

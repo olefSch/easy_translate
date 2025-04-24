@@ -1,8 +1,16 @@
 from models import *
 from translation_evaluator import TranslationEvaluator
-from datasets import load_dataset
 from configs.config import MODEL_REGISTRY
 import yaml
+from datasets import load_dataset
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+logger = logging.getLogger(__name__)
 
 def main():
     models_to_evaluate = ["mistral", "m2m100", "marian", "t5", "nllb", "mbart50", "llama3.1", "llama3.2", "gemma", "phi3"]
@@ -16,14 +24,14 @@ def main():
     for model_name in models_to_evaluate:
         translator_class = MODEL_REGISTRY.get(model_name)
         if not translator_class:
-            print(f"⚠️ Skipping unknown model: {model_name}")
+            logger.warning(f"⚠️ Skipping unknown model: {model_name}")
             continue
 
         for lang_pair, model_configs in language_mappings.items():
             if model_name not in model_configs:
                 continue
 
-            print(f"\n🔍 Evaluating {model_name.upper()} on {lang_pair}")
+            logger.info(f"Evaluating {model_name.upper()} on {lang_pair}")
 
             source_lang, target_lang = lang_pair.split("-")
             config = model_configs[model_name]
@@ -32,11 +40,11 @@ def main():
 
             # Load dataset
             try:
-                dataset = load_dataset("wmt19", lang_pair, split="train[:10000]")
+                dataset = load_dataset("wmt19", lang_pair, split="train[:1000]")
                 source_sentences = [ex['translation'][source_lang] for ex in dataset]
                 target_sentences = [ex['translation'][target_lang] for ex in dataset]
             except Exception as e:
-                print(f"⚠️ Failed to load dataset for {lang_pair}: {e}")
+                logger.warning(f"⚠️ Failed to load dataset for {lang_pair}: {e}")
                 continue
 
             # Initialize translator
@@ -63,7 +71,7 @@ def main():
                 )
 
             except Exception as e:
-                print(f"❌ Failed to evaluate {model_name} on {lang_pair}: {e}")
+                logger.warning(f"❌ Failed to evaluate {model_name} on {lang_pair}: {e}")
                 continue
 
     # Final report
