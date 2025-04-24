@@ -1,0 +1,2 @@
+model,bleu,meteor
+llama3.1_ru-en,0.2256,0.713

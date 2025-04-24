@@ -128,9 +128,17 @@ class TranslationEvaluator:
 
         return translations
 
-    def generate_report(self) -> None:
+    def generate_report(self, path: str, models: str | list[str] | None = None) -> None:
         """
-        Print a summary and save the evaluation results to a CSV using pandas.
+        Save a CSV and print a summary of the evaluation results.
+
+        Args:
+            path   : Where to write the CSV (include “.csv” in the name).
+            models : • None  → include every model in `self.evaluation_results`
+                    • str   → include just that one model
+                    • list  → include the specified subset
+        Returns:
+            None.
         """
         if not self.evaluation_results:
             logger.warning("No evaluation results found. Run `evaluate` first.")
@@ -141,6 +149,15 @@ class TranslationEvaluator:
         df.index.name = "model"
         df = df.round(4)
 
+         # filter if requested
+        if models is not None:
+            if isinstance(models, str):
+                models = [models]
+            missing = [m for m in models if m not in df.index]
+            if missing:
+                logger.warning(f"⚠️ Requested model(s) not found: {missing}")
+            df = df.loc[[m for m in models if m in df.index]]
+
         # Print to console
         logger.info("===== Evaluation Report =====")
         for model_name, row in df.iterrows():
@@ -150,10 +167,9 @@ class TranslationEvaluator:
         logger.info("=============================")
 
         # Save to CSV
-        report_path = "translation_evaluation_report.csv"
         try:
-            df.to_csv(report_path)
-            logger.info(f"✅ Results saved to: {report_path}")
+            df.to_csv(path)
+            logger.info(f"✅ Results saved to: {path}")
         except Exception as e:
             logger.error(f"❌ Failed to write CSV report: {e}")
 

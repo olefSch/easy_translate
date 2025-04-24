@@ -74,8 +74,8 @@ def main():
                 logger.warning(f"❌ Failed to evaluate {model_name} on {lang_pair}: {e}")
                 continue
 
-    # Final report
-    evaluator.generate_report()
+            # Final report
+            evaluator.generate_report(f"reports/{model_name}_{lang_pair}_report.csv", models=model_id)
 
 
 if __name__ == "__main__":

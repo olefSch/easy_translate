@@ -1,0 +1,2 @@
+model,bleu,meteor
+m2m100_fi-en,0.3029,0.7349
