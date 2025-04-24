@@ -1,17 +1,4 @@
 language_mappings:
-  cs-en:
-    nllb:      {source: ces_Latn, target: eng_Latn}
-    m2m100:    {source: cs,        target: en}
-    mbart50:   {source: cs_CZ,     target: en_XX}
-    marian:    {source: cs,        target: en}
-    t5:        {source: Czech,     target: English}
-
-    llama3.2:  {source: Czech,     target: English}
-    llama3.1:  {source: Czech,     target: English}
-    gemma:     {source: Czech,     target: English}
-    phi3:      {source: Czech,     target: English}
-    mistral:   {source: Czech,     target: English}
-
   de-en:
     nllb:      {source: deu_Latn,  target: eng_Latn}
     m2m100:    {source: de,        target: en}
@@ -38,19 +25,6 @@ language_mappings:
     phi3:      {source: Finnish,   target: English}
     mistral:   {source: Finnish,   target: English}
 
-  fr-de:
-    nllb:      {source: fra_Latn,  target: deu_Latn}
-    m2m100:    {source: fr,        target: de}
-    mbart50:   {source: fr_XX,     target: de_DE}
-    marian:    {source: fr,        target: de}
-    t5:        {source: French,    target: German}
-
-    llama3.2:  {source: French,    target: German}
-    llama3.1:  {source: French,    target: German}
-    gemma:     {source: French,    target: German}
-    phi3:      {source: French,    target: German}
-    mistral:   {source: French,    target: German}
-
   gu-en:
     nllb:      {source: guj_Gujr,  target: eng_Latn}
     m2m100:    {source: gu,        target: en}
@@ -63,19 +37,6 @@ language_mappings:
     gemma:     {source: Gujarati,  target: English}
     phi3:      {source: Gujarati,  target: English}
     mistral:   {source: Gujarati,  target: English}
-
-  kk-en:
-    nllb:      {source: kaz_Cyrl,  target: eng_Latn}
-    m2m100:    {source: kk,        target: en}
-    mbart50:   {source: kk_KZ,     target: en_XX}
-    marian:    {source: kk,        target: en}       
-    t5:        {source: Kazakh,    target: English}
-
-    llama3.2:  {source: Kazakh,    target: English}
-    llama3.1:  {source: Kazakh,    target: English}
-    gemma:     {source: Kazakh,    target: English}
-    phi3:      {source: Kazakh,    target: English}
-    mistral:   {source: Kazakh,    target: English}
 
   lt-en:
     nllb:      {source: lit_Latn,  target: eng_Latn}
