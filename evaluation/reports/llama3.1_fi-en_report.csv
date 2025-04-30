@@ -1,2 +1,2 @@
 model,bleu,meteor
-llama3.1_fi-en,0.2481,0.3551
+llama3.1_fi-en,0.173,0.4724
