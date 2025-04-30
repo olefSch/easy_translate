@@ -1,0 +1,2 @@
+model,bleu,meteor
+nllb_gu-en,0.1026,0.3934

@@ -1,0 +1,2 @@
+model,bleu,meteor
+nllb_de-en,0.2726,0.5551
