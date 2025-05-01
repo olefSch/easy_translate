@@ -1,6 +1,8 @@
-from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
-from models.base_translator import BaseTranslator
 import torch
+from transformers import MBart50TokenizerFast, MBartForConditionalGeneration
+
+from .base_translator import BaseTranslator
+
 
 class MBartTranslator(BaseTranslator):
     """
@@ -12,11 +14,11 @@ class MBartTranslator(BaseTranslator):
         model_name_or_path: str = "facebook/mbart-large-50-many-to-many-mmt",
         source_lang: str = "en_XX",
         target_lang: str = "de_DE",
-        device: str = "cpu"
+        device: str = "cpu",
     ):
         """
         Load a local mBART-50 model from disk or Hugging Face.
-        
+
         Args:
             model_name_or_path (str): Path or name of the mBART-50 model
                                       (e.g., "facebook/mbart-large-50-many-to-many-mmt").
@@ -41,7 +43,9 @@ class MBartTranslator(BaseTranslator):
         Translate the given text using the mBART-50 model.
         """
         # Tokenize the input text
-        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(self.model.device)
+        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(
+            self.model.device
+        )
 
         # Force the model to produce text in the target language
         forced_bos_token_id = self.tokenizer.lang_code_to_id[self.target_lang]
@@ -50,10 +54,10 @@ class MBartTranslator(BaseTranslator):
         with torch.no_grad():
             output_ids = self.model.generate(
                 **inputs,
-                max_length=128,             # adjust as needed
-                num_beams=4,               # tune as needed
+                max_length=128,  # adjust as needed
+                num_beams=4,  # tune as needed
                 early_stopping=True,
-                forced_bos_token_id=forced_bos_token_id
+                forced_bos_token_id=forced_bos_token_id,
             )
 
         # Decode the output

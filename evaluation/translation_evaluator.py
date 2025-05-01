@@ -1,155 +1,154 @@
 import logging
-from typing import List, Dict
 import time
+from pathlib import Path
+from typing import Dict, List, Optional, Union
+
 import evaluate
-from models.base_translator import BaseTranslator
 import pandas as pd
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
+from evaluation.models.base_translator import BaseTranslator
 
+# Configure module‐level logger
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.propagate = False
+_handler = logging.StreamHandler()
+_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+logger.addHandler(_handler)
+
 
 class TranslationEvaluator:
-    """
-    TranslationEvaluator orchestrates the evaluation of different
-    translation models on a given dataset. It calculates standard
-    translation metrics, compares them, and generates summary reports.
+    """Evaluate translation models against reference translations.
+
+    This class orchestrates evaluation of multiple translation models
+    computing metrics like BLEU and METEOR on provided datasets.
+    Results can be retrieved programmatically or saved as reports.
 
     Typical usage:
-        1. Instantiate TranslationEvaluator.
-        2. Register one or more translation models (local or remote).
-        3. Run `evaluate` with input data and reference translations.
-        4. Retrieve metrics and generate a comparative report.
+        evaluator = TranslationEvaluator()
+        evaluator.register_model('model1', translator1)
+        results = evaluator.evaluate(
+            inputs, references, model_names=['model1'])
+        evaluator.generate_report('results.csv', models=['model1'])
     """
 
     def __init__(self) -> None:
-        """
-        Initialize the TranslationEvaluator with optional configuration.
+        """Initialize the evaluator with default metrics."""
+
+        self._registered_models: Dict[str, BaseTranslator] = {}
+        self._results: Dict[str, Dict[str, float]] = {}
+        self._bleu = evaluate.load("bleu")
+        self._meteor = evaluate.load("meteor")
+
+    def register_model(self, name: str, model: BaseTranslator) -> None:
+        """Register a translation model for evaluation.
 
         Args:
-            None
-        """
-        self.registered_models = {}
-        self.evaluation_results = {}
-        self.bleu_metric = evaluate.load("bleu")
-        self.meteor_metric = evaluate.load("meteor")
+            name (str): Unique identifier for the model.
+            model (BaseTranslator): Instance implementing BaseTranslator interface.
 
-    def register_model(self, model_name: str, model_instance: BaseTranslator) -> None:
+        Raises:
+            ValueError: If name is empty or model is None.
         """
-        Register a translation model with the evaluator.
-
-        Args:
-            model_name (str): Identifier for the model (e.g., "LocalLLM_v1").
-            model_instance (BaseTranslator): Instance of a class implementing
-                the BaseTranslator interface.
-        Returns:
-            None.
-        """
-        if model_name in self.registered_models:
-            logger.warning(f"Model '{model_name}' is already registered. Overwriting.")
-        self.registered_models[model_name] = model_instance
-        logger.info(f"Model '{model_name}' registered successfully.")
+        if not name:
+            raise ValueError("Model name must not be empty.")
+        if model is None:
+            raise ValueError("Model instance must not be None.")
+        if name in self._registered_models:
+            logger.warning("Overwriting existing model '%s'.", name)
+        self._registered_models[name] = model
+        logger.info("Registered model '%s'.", name)
 
     def evaluate(
-        self, 
-        input_texts: List[str], 
-        reference_texts: List[str],
-        model_list: List[str],
+        self,
+        inputs: List[str],
+        references: List[str],
+        model_names: Optional[List[str]] = None,
     ) -> Dict[str, Dict[str, float]]:
-        """
-        Evaluate all registered models on the given input and reference texts.
+        """Evaluate registered models on inputs against reference translations.
 
         Args:
-            input_texts (List[str]): List of source texts to translate.
-            reference_texts (List[str]): List of reference translations 
-                corresponding to the input_texts.
-            metrics (List[str], optional): List of metric names to use. 
-                Defaults to ["bleu", "meteor"].
+            inputs (List[str]): List of source texts to translate.
+            references (List[str]): List of corresponding reference translations.
+            model_names (Optional[List[str]]): Subset of registered model names to evaluate.
+                If None, evaluates all registered models.
 
         Returns:
-            Dict[str, Dict[str, float]]: Nested dictionary with model names 
-            as keys and metric results as values, e.g.:
-                {
-                    "LocalLLM_v1": {"bleu": 0.42, "meteor": 0.60},
-                    "LocalLLM_v2": {"bleu": 0.44, "meteor": 0.61}
-                }
+            Dict[str, Dict[str, float]]: Mapping from model name to a dict of metric scores.
+
+        Raises:
+            ValueError: If inputs and references lengths differ.
+            KeyError: If a specified model or metric is not registered.
         """
 
-        if model_list is None:
-            model_list = list(self.registered_models.keys())
+        if len(inputs) != len(references):
+            raise ValueError(
+                f"Inputs length {len(inputs)} does not match "
+                f"references length {len(references)}."
+            )
 
-        logger.info("Starting evaluation...")
+        model_names = model_names or list(self._registered_models)
+        for name in model_names:
+            if name not in self._registered_models:
+                raise KeyError(f"Model '{name}' not registered.")
+
+        logger.info(
+            "Starting evaluation of %d models on %d samples",
+            len(model_names),
+            len(inputs),
+        )
         start_time = time.time()
 
-        for model_name in model_list:
-            model = self.registered_models[model_name]
-            logger.info(f"Evaluating model '{model_name}'...")
-            translations = self._generate_translations(model, input_texts)
-            results = {}
+        formatted_refs = [[r] for r in references]
 
-            formatted_references = [[ref] for ref in reference_texts]
+        for name in model_names:
+            model = self._registered_models[name]
+            translations = self._batch_translate(model, inputs)
 
-            bleu_result = self.bleu_metric.compute(
-                predictions=translations, 
-                references=formatted_references
-            )
-            results["bleu"] = bleu_result["bleu"]
+            bleu_res = self._bleu.compute(
+                predictions=translations, references=formatted_refs
+            )["bleu"]
+            meteor_res = self._meteor.compute(
+                predictions=translations, references=formatted_refs
+            )["meteor"]
 
-            meteor_result = self.meteor_metric.compute(
-                predictions=translations,
-                references=formatted_references
-            )
-            results["meteor"] = meteor_result["meteor"]
+            self._results[name] = {
+                "bleu": bleu_res,
+                "meteor": meteor_res,
+            }
 
-            self.evaluation_results[model_name] = results
+        elapsed = time.time() - start_time
+        logger.info("Completed evaluation in %.2f seconds", elapsed)
+        return self._results
 
-        logger.info(f"Evaluation completed in {time.time() - start_time:.2f} seconds.")
-
-        return self.evaluation_results
-    
-    def _generate_translations(self, model: BaseTranslator, input_texts: List[str]) -> List[str]:
-        """
-        Helper method to generate translations from a model.
-
-        Args:
-            model (BaseTranslator): The translation model to use.
-            input_texts (List[str]): List of source texts to translate.
-
-        Returns:
-            List[str]: Translated texts from the model.
-        """
-        translations = []
-        for text in input_texts:
-            translation = model.translate(text)
-            translations.append(translation)
-
-        return translations
-
-    def generate_report(self, path: str, models: str | list[str] | None = None) -> None:
-        """
-        Save a CSV and print a summary of the evaluation results.
+    def generate_report(
+        self,
+        file_path: Union[str, Path],
+        models: Optional[Union[str, List[str]]] = None,
+    ) -> None:
+        """Save and print evaluation report for BLEU & METEOR.
 
         Args:
-            path   : Where to write the CSV (include “.csv” in the name).
-            models : • None  → include every model in `self.evaluation_results`
-                    • str   → include just that one model
-                    • list  → include the specified subset
+            file_path (Union[str, Path]): Destination CSV file path.
+            models (Optional[Union[str, List[str]]]): Single model name,
+                list of names, or None for all.
+
         Returns:
             None.
+
+        Raises:
+            ValueError: If no evaluation results are available.
         """
-        if not self.evaluation_results:
-            logger.warning("No evaluation results found. Run `evaluate` first.")
-            return
+
+        if not self._results:
+            raise ValueError("No evaluation results to report. Run evaluate() first.")
 
         # Convert results to DataFrame
-        df = pd.DataFrame.from_dict(self.evaluation_results, orient='index')
+        df = pd.DataFrame.from_dict(self._results, orient="index")
         df.index.name = "model"
         df = df.round(4)
 
-         # filter if requested
+        # filter if requested
         if models is not None:
             if isinstance(models, str):
                 models = [models]
@@ -159,17 +158,25 @@ class TranslationEvaluator:
             df = df.loc[[m for m in models if m in df.index]]
 
         # Print to console
-        logger.info("===== Evaluation Report =====")
-        for model_name, row in df.iterrows():
-            logger.info(f"Model: {model_name}")
-            for metric_name, score in row.items():
-                logger.info(f"  {metric_name.upper()}: {score:.4f}")
-        logger.info("=============================")
+        logger.info("===== Evaluation Report =====\n%s", df.to_string())
 
         # Save to CSV
         try:
+            path = Path(file_path)
             df.to_csv(path)
             logger.info(f"✅ Results saved to: {path}")
         except Exception as e:
             logger.error(f"❌ Failed to write CSV report: {e}")
 
+    @staticmethod
+    def _batch_translate(model: BaseTranslator, texts: List[str]) -> List[str]:
+        """Translate a batch of texts using the given model.
+
+        Args:
+            model (BaseTranslator): Translator instance.
+            texts (List[str]): List of source texts.
+
+        Returns:
+            List[str]: A list of translated text strings.
+        """
+        return [model.translate(t) for t in texts]

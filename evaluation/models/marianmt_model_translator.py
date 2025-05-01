@@ -1,6 +1,8 @@
-from transformers import MarianMTModel, MarianTokenizer
-from models.base_translator import BaseTranslator
 import torch
+from transformers import MarianMTModel, MarianTokenizer
+
+from .base_translator import BaseTranslator
+
 
 class MarianTranslator(BaseTranslator):
     """
@@ -12,13 +14,13 @@ class MarianTranslator(BaseTranslator):
         model_name_or_path: str = "Helsinki-NLP/opus-mt-en-de",
         source_lang: str = "English",
         target_lang: str = "German",
-        device: str = "cpu"
+        device: str = "cpu",
     ):
         """
         Load a local MarianMT model from disk or Hugging Face.
-        
+
         Args:
-            model_name_or_path (str): Path or name of the MarianMT model 
+            model_name_or_path (str): Path or name of the MarianMT model
                                       (e.g., "Helsinki-NLP/opus-mt-en-de").
             source_lang (str): Source language name (not strictly required by Marian,
                                but kept for consistency or referencing).
@@ -40,15 +42,17 @@ class MarianTranslator(BaseTranslator):
         """
         # MarianMT doesn't require a prompt like T5;
         # you simply pass the source text directly.
-        inputs = self.tokenizer([text], return_tensors="pt", padding=True).to(self.model.device)
+        inputs = self.tokenizer([text], return_tensors="pt", padding=True).to(
+            self.model.device
+        )
 
         # Generate translation
         with torch.no_grad():
             output_ids = self.model.generate(
                 **inputs,
-                max_length=128,       # adjust as needed
-                num_beams=4,         # tune as needed
-                early_stopping=True
+                max_length=128,  # adjust as needed
+                num_beams=4,  # tune as needed
+                early_stopping=True,
             )
 
         # Decode the output

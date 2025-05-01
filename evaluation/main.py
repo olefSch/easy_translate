@@ -1,81 +1,160 @@
-from models import *
-from translation_evaluator import TranslationEvaluator
-from configs.config import MODEL_REGISTRY
+import logging
+from pathlib import Path
+from typing import Any, Dict, List
+
 import yaml
 from datasets import load_dataset
-import logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
+from configs.config import (DATASET_NAME, DATASET_SPLIT, LANGUAGE_MAPPING_PATH,
+                            MODEL_REGISTRY, MODELS_TO_EVALUATE, OUTPUT_DIR)
+from evaluation.translation_evaluator import TranslationEvaluator
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+logger.addHandler(handler)
 
-def main():
-    models_to_evaluate = ["mistral", "m2m100", "marian", "t5", "nllb", "mbart50", "llama3.1", "llama3.2", "gemma", "phi3"]
 
-    # Load language mappings
-    with open("configs/language_mappings.yaml", 'r') as f:
-        language_mappings = yaml.safe_load(f)['language_mappings']
+def load_language_mappings(path: Path) -> Dict[str, Any]:
+    """Load the `language_mappings` section from a YAML file.
 
-    evaluator = TranslationEvaluator()
+    Args:
+        path (Path): Path to the YAML file containing the
+            top-level `language_mappings` key.
 
-    for model_name in models_to_evaluate:
-        translator_class = MODEL_REGISTRY.get(model_name)
-        if not translator_class:
-            logger.warning(f"⚠️ Skipping unknown model: {model_name}")
+    Returns:
+        Dict[str, Any]: The dictionary under `language_mappings`.
+
+    Raises:
+        FileNotFoundError: If the file at `path` does not exist.
+        KeyError: If the loaded YAML does not contain `language_mappings`.
+        yaml.YAMLError: If the file cannot be parsed as valid YAML.
+    """
+    if not path.exists():
+        raise FileNotFoundError(f"Mappings not found: {path}")
+    with path.open("r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
+    if "language_mappings" not in cfg:
+        raise KeyError(f"'language_mappings' not in {path}")
+    return cfg["language_mappings"]
+
+
+def evaluate_models(
+    evaluator: TranslationEvaluator,
+    models: List[str],
+    mappings: Dict[str, Any],
+    dataset_name: str,
+    split: str,
+    output_dir: Path,
+) -> None:
+    """Evaluate translation models on specified language pairs and save reports.
+
+    Args:
+        evaluator (TranslationEvaluator): The evaluation orchestrator instance.
+        models (List[str]): Keys of translators to evaluate (must exist in MODEL_REGISTRY).
+        mappings (Dict[str, Any]): A mapping from language‐pair strings
+            (e.g. "en-de") to per‐model configuration dicts.
+        dataset_name (str): Name of the HuggingFace dataset (e.g. "wmt19").
+        split (str): Dataset split specifier (e.g. "train[:1]").
+        output_dir (Path): Directory in which to write `<model>_<lang_pair>_report.csv`.
+
+    Returns:
+        None.
+
+    Raises:
+        FileNotFoundError: If a language mapping file is missing (handled upstream).
+        KeyError: If a model key is not found in the registry (logged and skipped).
+        Exception: Any errors during dataset loading, translator instantiation,
+            evaluation, or report generation are caught and logged per‐case.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    for model_name in models:
+        translator_cls = MODEL_REGISTRY.get(model_name)
+        if translator_cls is None:
+            logger.warning("Skipping unknown model '%s'.", model_name)
             continue
 
-        for lang_pair, model_configs in language_mappings.items():
-            if model_name not in model_configs:
+        for lang_pair, cfgs in mappings.items():
+            if model_name not in cfgs:
                 continue
 
-            logger.info(f"Evaluating {model_name.upper()} on {lang_pair}")
+            logger.info("Evaluating %s on %s", model_name, lang_pair)
+            src_lang, tgt_lang = lang_pair.split("-", 1)
+            src_code, tgt_code = (
+                cfgs[model_name].get("source"),
+                cfgs[model_name].get("target"),
+            )
 
-            source_lang, target_lang = lang_pair.split("-")
-            config = model_configs[model_name]
-            source_code = config.get("source")
-            target_code = config.get("target")
+            if not (src_code and tgt_code):
+                logger.error(
+                    "Missing source/target in mapping for %s:%s—skipping.",
+                    model_name,
+                    lang_pair,
+                )
+                continue
 
             # Load dataset
             try:
-                dataset = load_dataset("wmt19", lang_pair, split="train[:1000]")
-                source_sentences = [ex['translation'][source_lang] for ex in dataset]
-                target_sentences = [ex['translation'][target_lang] for ex in dataset]
-            except Exception as e:
-                logger.warning(f"⚠️ Failed to load dataset for {lang_pair}: {e}")
-                continue
-
-            # Initialize translator
-            try:
-                if model_name == "marian":
-                    model_args = {
-                        "model_name_or_path": f"Helsinki-NLP/opus-mt-{source_code}-{target_code}",
-                        "source_lang": source_lang.capitalize(),
-                        "target_lang": target_lang.capitalize()
-                    }
-                else:
-                    model_args = {
-                        "source_lang": source_code,
-                        "target_lang": target_code
-                    }
-
-                translator = translator_class(**model_args)
-                model_id = f"{model_name}_{lang_pair}"
-                evaluator.register_model(model_id, translator)
-                evaluator.evaluate(
-                    source_sentences, 
-                    target_sentences, 
-                    model_list=[model_id]
+                ds = load_dataset(dataset_name, lang_pair, split=split)
+                inputs = [ex["translation"][src_lang] for ex in ds]
+                refs = [ex["translation"][tgt_lang] for ex in ds]
+            except Exception:
+                logger.exception(
+                    "Failed to load %s[%s]; skipping.", dataset_name, split
                 )
-
-            except Exception as e:
-                logger.warning(f"❌ Failed to evaluate {model_name} on {lang_pair}: {e}")
                 continue
 
-            # Final report
-            evaluator.generate_report(f"reports/{model_name}_{lang_pair}_report.csv", models=model_id)
+            # Instantiate translator
+            try:
+                init_args = {"source_lang": src_code, "target_lang": tgt_code}
+                if model_name == "marian":
+                    init_args["model_name_or_path"] = (
+                        f"Helsinki-NLP/opus-mt-{src_code}-{tgt_code}"
+                    )
+                    init_args["source_lang"] = src_lang.capitalize()
+                    init_args["target_lang"] = tgt_lang.capitalize()
+
+                translator = translator_cls(**init_args)
+            except Exception:
+                logger.exception("Failed to init translator %s; skipping.", model_name)
+                continue
+
+            # Register, evaluate, report
+            model_id = f"{model_name}_{lang_pair}"
+            evaluator.register_model(model_id, translator)
+
+            try:
+                evaluator.evaluate(inputs, refs, model_names=[model_id])
+            except Exception:
+                logger.exception("Evaluation failed for %s; continuing.", model_id)
+                continue
+
+            report_file = output_dir / f"{model_id}_report.csv"
+            try:
+                evaluator.generate_report(report_file, models=model_id)
+            except Exception:
+                logger.exception("Could not write report for %s.", model_id)
+
+
+def main() -> None:
+    """Orchestrate loading configs, running evaluations, and saving reports."""
+    try:
+        mappings = load_language_mappings(LANGUAGE_MAPPING_PATH)
+    except Exception as e:
+        logger.error("Aborting: %s", e)
+        return
+
+    evaluator = TranslationEvaluator()
+    evaluate_models(
+        evaluator=evaluator,
+        models=MODELS_TO_EVALUATE,
+        mappings=mappings,
+        dataset_name=DATASET_NAME,
+        split=DATASET_SPLIT,
+        output_dir=OUTPUT_DIR,
+    )
 
 
 if __name__ == "__main__":

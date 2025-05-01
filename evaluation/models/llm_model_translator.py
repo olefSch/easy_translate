@@ -1,5 +1,7 @@
 from ollama import Client
-from models.base_translator import BaseTranslator
+
+from .base_translator import BaseTranslator
+
 
 class LLMTranslator(BaseTranslator):
     """
@@ -12,7 +14,7 @@ class LLMTranslator(BaseTranslator):
         num_predict: int = 256,
         source_lang: str = "English",
         target_lang: str = "German",
-        stop: list[str] | None = None
+        stop: list[str] | None = None,
     ):
         """
         Args:
@@ -20,10 +22,10 @@ class LLMTranslator(BaseTranslator):
             num_predict: maximum number of tokens to predict per call
             stop: optional list of stop sequences
         """
-        self.client      = Client()
-        self.model_name  = model_name
+        self.client = Client()
+        self.model_name = model_name
         self.num_predict = num_predict
-        self.stop        = stop or ["—"]
+        self.stop = stop or ["—"]
         self.source_lang = source_lang
         self.target_lang = target_lang
 
@@ -45,6 +47,6 @@ class LLMTranslator(BaseTranslator):
             options={
                 "num_predict": self.num_predict,
                 "stop": self.stop,
-            }
+            },
         )
         return response["response"].strip()
