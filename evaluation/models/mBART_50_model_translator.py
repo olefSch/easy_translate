@@ -1,65 +1,112 @@
-import torch
-from transformers import MBart50TokenizerFast, MBartForConditionalGeneration
+import logging
+from typing import Any, Dict, Optional, Union
 
-from .base_translator import BaseTranslator
+import torch
+from transformers import (MBart50TokenizerFast, MBartForConditionalGeneration,
+                          PreTrainedModel, PreTrainedTokenizer)
+
+from .base_translator import BaseTranslator, TranslationError
+
+logger = logging.getLogger(__name__)
 
 
 class MBartTranslator(BaseTranslator):
     """
-    Example translator class for a local mBART-50 model.
+    Translator using Hugging Face’s mBART-50 model for multilingual translation.
     """
+
+    MODEL_NAME: str = "facebook/mbart-large-50-many-to-many-mmt"
 
     def __init__(
         self,
-        model_name_or_path: str = "facebook/mbart-large-50-many-to-many-mmt",
-        source_lang: str = "en_XX",
-        target_lang: str = "de_DE",
-        device: str = "cpu",
+        source_lang: str,
+        target_lang: str,
+        device: Union[str, torch.device] = "cpu",
+        max_length: int = 512,
+        num_beams: int = 4,
+        tokenizer_kwargs: Optional[Dict[str, Any]] = None,
+        model_kwargs: Optional[Dict[str, Any]] = None,
     ):
-        """
-        Load a local mBART-50 model from disk or Hugging Face.
+        """Initialize the mBART-50 translator.
+
 
         Args:
-            model_name_or_path (str): Path or name of the mBART-50 model
-                                      (e.g., "facebook/mbart-large-50-many-to-many-mmt").
             source_lang (str): Source language code (e.g. "en_XX").
             target_lang (str): Target language code (e.g. "de_DE").
-            device (str): "cpu" or "cuda".
+            device (Union[str, torch.device], optional): "cpu", "cuda",
+                or a torch.device. Defaults to "cpu".
+            max_length (int): Maximum length of generated sequences.
+                Defaults to 512.
+            num_beams (int): Number of beams for beam‐search.
+                Defaults to 4.
+            tokenizer_kwargs (Optional[Dict[str, Any]]): Extra kwargs for
+                `MBart50TokenizerFast.from_pretrained`. Defaults to None.
+            model_kwargs (Optional[Dict[str, Any]]): Extra kwargs for
+                `MBartForConditionalGeneration.from_pretrained`. Defaults to None.
+
+        Raises:
+            ValueError: If source_lang or target_lang are empty,
+                or if max_length or num_beams are not positive.
         """
+        self._validate_language_pair(source_lang, target_lang)
+        self._validate_generation_params(max_length, num_beams)
+
         self.source_lang = source_lang
         self.target_lang = target_lang
-        self.device = device
+        self.max_length = max_length
+        self.num_beams = num_beams
+        self.device = torch.device(device)
 
-        # Load tokenizer and model
-        self.tokenizer = MBart50TokenizerFast.from_pretrained(model_name_or_path)
-        self.model = MBartForConditionalGeneration.from_pretrained(model_name_or_path)
-        self.model.to(device)
-
-        # Set the source language so the tokenizer knows how to handle the input
+        tk_kwargs = tokenizer_kwargs or {}
+        self.tokenizer: PreTrainedTokenizer = MBart50TokenizerFast.from_pretrained(
+            self.MODEL_NAME, **tk_kwargs
+        )
         self.tokenizer.src_lang = self.source_lang
 
-    def translate(self, text: str) -> str:
-        """
-        Translate the given text using the mBART-50 model.
-        """
-        # Tokenize the input text
-        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(
-            self.model.device
+        md_kwargs = model_kwargs or {}
+        self.model: PreTrainedModel = (
+            MBartForConditionalGeneration.from_pretrained(self.MODEL_NAME, **md_kwargs)
+            .to(self.device)
+            .eval()
         )
 
-        # Force the model to produce text in the target language
-        forced_bos_token_id = self.tokenizer.lang_code_to_id[self.target_lang]
+    def translate(self, text: str) -> str:
+        """Translate a single sentence using the mBART-50 model.
 
-        # Generate translation
-        with torch.no_grad():
-            output_ids = self.model.generate(
-                **inputs,
-                max_length=128,  # adjust as needed
-                num_beams=4,  # tune as needed
-                early_stopping=True,
-                forced_bos_token_id=forced_bos_token_id,
-            )
+        Args:
+            text (str): The input sentence in the source language.
 
-        # Decode the output
-        translated_text = self.tokenizer.decode(output_ids[0], skip_special_tokens=True)
-        return translated_text
+        Returns:
+            str: Translated sentence.
+
+        Raises:
+            TranslationError: If `text` is empty or generation fails.
+        """
+
+        if not isinstance(text, str) or not text.strip():
+            raise TranslationError("Input text must be a non-empty string")
+
+        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(self.device)
+
+        forced_bos = self.tokenizer.lang_code_to_id.get(self.target_lang)
+
+        # Generate
+        try:
+            with torch.no_grad():
+                output_ids = self.model.generate(
+                    **inputs,
+                    forced_bos_token_id=forced_bos,
+                    max_length=self.max_length,
+                    num_beams=self.num_beams,
+                    early_stopping=True,
+                )
+        except Exception as e:
+            logger.error("mBART-50 generation error: %s", e)
+            raise TranslationError(f"Translation failed: {e}") from e
+
+        # Decode and clean up
+        translated = self.tokenizer.decode(
+            output_ids[0], skip_special_tokens=True
+        ).strip()
+
+        return translated

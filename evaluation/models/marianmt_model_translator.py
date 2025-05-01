@@ -3,17 +3,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import torch
-from transformers import (
-    MarianMTModel,
-    MarianTokenizer,
-    PreTrainedModel,
-    PreTrainedTokenizer,
-)
+from transformers import (MarianMTModel, MarianTokenizer, PreTrainedModel,
+                          PreTrainedTokenizer)
 
 from .base_translator import BaseTranslator, TranslationError
 
 logger = logging.getLogger(__name__)
-
 
 
 class MarianTranslator(BaseTranslator):
@@ -32,7 +27,6 @@ class MarianTranslator(BaseTranslator):
         num_beams: int = 4,
         tokenizer_kwargs: Optional[Dict[str, Any]] = None,
         model_kwargs: Optional[Dict[str, Any]] = None,
-
     ):
         """Initialize the MarianMT translator.
 
@@ -41,9 +35,9 @@ class MarianTranslator(BaseTranslator):
             target_lang (str): Name of the target language.
             device (Union[str, torch.device]): "cpu", "cuda", or a torch.device.
                 Defaults to "cpu".
-            max_length (int): Maximum length of generated sequences. 
+            max_length (int): Maximum length of generated sequences.
                 Defaults to 512.
-            num_beams (int): Number of beams for beam search. 
+            num_beams (int): Number of beams for beam search.
                 Defaults to 4.
             tokenizer_kwargs (Optional[Dict[str, Any]]): Extra kwargs passed to
                 `MarianTokenizer.from_pretrained`. Defaults to None.
@@ -79,7 +73,6 @@ class MarianTranslator(BaseTranslator):
             .eval()
         )
 
-
     def translate(self, text: str) -> str:
         """Translate a single sentence using the MarianMT model.
 
@@ -95,9 +88,8 @@ class MarianTranslator(BaseTranslator):
         if not isinstance(text, str) or not text.strip():
             raise TranslationError("Input text must be a non-empty string")
 
-        inputs = (
-            self.tokenizer([text], return_tensors="pt", padding=True)
-            .to(self.device)
+        inputs = self.tokenizer([text], return_tensors="pt", padding=True).to(
+            self.device
         )
 
         # Generate
@@ -114,9 +106,8 @@ class MarianTranslator(BaseTranslator):
             raise TranslationError(f"Translation failed: {e}") from e
 
         # Decode and clean up
-        tranlated =  self.tokenizer.decode(
+        tranlated = self.tokenizer.decode(
             output_ids[0], skip_special_tokens=True
-            ).strip()
-        
+        ).strip()
+
         return tranlated
-        

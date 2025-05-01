@@ -72,7 +72,7 @@ class M2M100Translator(BaseTranslator):
         self.num_beams = num_beams
 
     def translate(self, text: str) -> str:
-        """Translate a single text string from source_lang → target_lang.
+        """Translate a single sentence using the M2M100 model.
 
         Args:
             text (str): Input sentence in the source language.
@@ -81,11 +81,10 @@ class M2M100Translator(BaseTranslator):
             str: Translated sentence.
 
         Raises:
-            ValueError: If `text` is empty.
-            RuntimeError: If generation fails.
+            TranslationError: If `text` is empty or generation fails.
         """
-        if not text:
-            raise ValueError("Input `text` must not be empty")
+        if not isinstance(text, str) or not text.strip():
+            raise TranslationError("Input text must be a non-empty string")
 
         inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(self.device)
         forced_bos = self.tokenizer.get_lang_id(self.target_lang)
