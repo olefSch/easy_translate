@@ -7,7 +7,7 @@ from datasets import load_dataset
 
 from configs.config import (DATASET_NAME, DATASET_SPLIT, LANGUAGE_MAPPING_PATH,
                             MODEL_REGISTRY, MODELS_TO_EVALUATE, OUTPUT_DIR)
-from evaluation.translation_evaluator import TranslationEvaluator
+from translation_evaluator import TranslationEvaluator
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
