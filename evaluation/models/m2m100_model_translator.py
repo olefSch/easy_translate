@@ -6,7 +6,7 @@ import torch
 from transformers import (M2M100ForConditionalGeneration, M2M100Tokenizer,
                           PreTrainedModel, PreTrainedTokenizer)
 
-from .base_translator import BaseTranslator
+from .base_translator import BaseTranslator, TranslationError
 
 logger = logging.getLogger(__name__)
 
@@ -35,9 +35,9 @@ class M2M100Translator(BaseTranslator):
             target_lang (str): Target language code (e.g. "de").
             device (Union[str, torch.device], optional): "cpu", "cuda",
                 or a torch.device. Defaults to "cpu".
-            max_length (int, optional): Maximum length of generated sequences.
+            max_length (int): Maximum length of generated sequences.
                 Defaults to 512.
-            num_beams (int, optional): Number of beams for beam‐search.
+            num_beams (int): Number of beams for beam‐search.
                 Defaults to 4.
             tokenizer_kwargs (Optional[Dict[str, Any]]): Extra kwargs for
                 `M2M100Tokenizer.from_pretrained`. Defaults to None.
@@ -48,12 +48,8 @@ class M2M100Translator(BaseTranslator):
             ValueError: If source_lang or target_lang are empty,
                 or if max_length or num_beams are not positive.
         """
-        if not source_lang or not target_lang:
-            raise ValueError("Both `source_lang` and `target_lang` are required")
-        if max_length <= 0:
-            raise ValueError("`max_length` must be > 0")
-        if num_beams <= 0:
-            raise ValueError("`num_beams` must be > 0")
+        self._validate_language_pair(source_lang, target_lang)
+        self._validate_generation_params(max_length, num_beams)
 
         self.device = torch.device(device)
 
@@ -82,7 +78,7 @@ class M2M100Translator(BaseTranslator):
             text (str): Input sentence in the source language.
 
         Returns:
-            str: Translated sentence (no special tokens).
+            str: Translated sentence.
 
         Raises:
             ValueError: If `text` is empty.
@@ -106,7 +102,7 @@ class M2M100Translator(BaseTranslator):
                 )
         except Exception as e:
             logger.error("M2M100 generation error: %s", e)
-            raise RuntimeError(f"Translation failed: {e}") from e
+            raise TranslationError(f"Translation failed: {e}") from e
 
         # Decode and clean up
         translated = self.tokenizer.decode(

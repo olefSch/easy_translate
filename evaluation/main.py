@@ -109,13 +109,6 @@ def evaluate_models(
             # Instantiate translator
             try:
                 init_args = {"source_lang": src_code, "target_lang": tgt_code}
-                if model_name == "marian":
-                    init_args["model_name_or_path"] = (
-                        f"Helsinki-NLP/opus-mt-{src_code}-{tgt_code}"
-                    )
-                    init_args["source_lang"] = src_lang.capitalize()
-                    init_args["target_lang"] = tgt_lang.capitalize()
-
                 translator = translator_cls(**init_args)
             except Exception:
                 logger.exception("Failed to init translator %s; skipping.", model_name)

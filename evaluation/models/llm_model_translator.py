@@ -6,15 +6,9 @@ from typing import Any, Dict, List, Optional
 
 from ollama import Client
 
-from .base_translator import BaseTranslator
+from .base_translator import BaseTranslator, TranslationError
 
 logger = logging.getLogger(__name__)
-
-
-class TranslationError(Exception):
-    """Raised when the LLM-based translation fails."""
-
-    pass
 
 
 class LLMTranslator(BaseTranslator):
