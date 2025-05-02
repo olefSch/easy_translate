@@ -1,10 +1,13 @@
 import logging
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 import torch
-from transformers import (M2M100ForConditionalGeneration, M2M100Tokenizer,
-                          PreTrainedModel, PreTrainedTokenizer)
+from transformers import (
+    M2M100ForConditionalGeneration,
+    M2M100Tokenizer,
+    PreTrainedModel,
+    PreTrainedTokenizer,
+)
 
 from .base_translator import BaseTranslator, TranslationError
 

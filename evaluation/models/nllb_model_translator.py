@@ -2,8 +2,12 @@ import logging
 from typing import Any, Dict, Optional, Union
 
 import torch
-from transformers import (AutoModelForSeq2SeqLM, AutoTokenizer,
-                          PreTrainedModel, PreTrainedTokenizer)
+from transformers import (
+    AutoModelForSeq2SeqLM,
+    AutoTokenizer,
+    PreTrainedModel,
+    PreTrainedTokenizer,
+)
 
 from .base_translator import BaseTranslator, TranslationError
 
