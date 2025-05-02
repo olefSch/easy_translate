@@ -29,7 +29,6 @@ class MBartTranslator(BaseTranslator):
     ):
         """Initialize the mBART-50 translator.
 
-
         Args:
             source_lang (str): Source language code (e.g. "en_XX").
             target_lang (str): Target language code (e.g. "de_DE").
