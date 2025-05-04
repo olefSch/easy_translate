@@ -4,7 +4,6 @@ language_mappings:
     m2m100:    {source: de,        target: en}
     mbart50:   {source: de_DE,     target: en_XX}
     marian:    {source: de,        target: en}
-    t5:        {source: German,    target: English}
 
     llama3.2:  {source: German,    target: English}
     llama3.1:  {source: German,    target: English}
@@ -17,7 +16,6 @@ language_mappings:
     m2m100:    {source: fi,        target: en}
     mbart50:   {source: fi_FI,     target: en_XX}
     marian:    {source: fi,        target: en}
-    t5:        {source: Finnish,   target: English}
 
     llama3.2:  {source: Finnish,   target: English}
     llama3.1:  {source: Finnish,   target: English}
@@ -30,7 +28,6 @@ language_mappings:
     m2m100:    {source: gu,        target: en}
     mbart50:   {source: gu_IN,     target: en_XX}
     marian:    {source: gu,        target: en}       
-    t5:        {source: Gujarati,  target: English}
 
     llama3.2:  {source: Gujarati,  target: English}
     llama3.1:  {source: Gujarati,  target: English}
@@ -43,7 +40,6 @@ language_mappings:
     m2m100:    {source: lt,        target: en}
     mbart50:   {source: lt_LT,     target: en_XX}
     marian:    {source: lt,        target: en}        
-    t5:        {source: Lithuanian,target: English}
 
     llama3.2:  {source: Lithuanian,target: English}
     llama3.1:  {source: Lithuanian,target: English}
@@ -56,7 +52,6 @@ language_mappings:
     m2m100:    {source: ru,        target: en}
     mbart50:   {source: ru_RU,     target: en_XX}
     marian:    {source: ru,        target: en}
-    t5:        {source: Russian,   target: English}
 
     llama3.2:  {source: Russian,   target: English}
     llama3.1:  {source: Russian,   target: English}
@@ -69,7 +64,6 @@ language_mappings:
     m2m100:    {source: zh,        target: en}
     mbart50:   {source: zh_CN,     target: en_XX}
     marian:    {source: zh,        target: en}
-    t5:        {source: Chinese,   target: English}
 
     llama3.2:  {source: Chinese,   target: English}
     llama3.1:  {source: Chinese,   target: English}

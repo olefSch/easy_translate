@@ -5,8 +5,14 @@ from typing import Any, Dict, List
 import yaml
 from datasets import load_dataset
 
-from configs.config import (DATASET_NAME, DATASET_SPLIT, LANGUAGE_MAPPING_PATH,
-                            MODEL_REGISTRY, MODELS_TO_EVALUATE, OUTPUT_DIR)
+from configs.config import (
+    DATASET_NAME,
+    DATASET_SPLIT,
+    LANGUAGE_MAPPING_PATH,
+    MODEL_REGISTRY,
+    MODELS_TO_EVALUATE,
+    OUTPUT_DIR,
+)
 from translation_evaluator import TranslationEvaluator
 
 logger = logging.getLogger(__name__)

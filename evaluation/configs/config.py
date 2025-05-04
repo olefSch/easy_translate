@@ -4,8 +4,14 @@ from functools import partial
 from pathlib import Path
 from typing import List
 
-from models import (LLMTranslator, M2M100Translator, MarianTranslator,
-                    MBartTranslator, NllbTranslator, T5Translator)
+from models import (
+    LLMTranslator,
+    M2M100Translator,
+    MarianTranslator,
+    MBartTranslator,
+    NllbTranslator,
+    T5Translator,
+)
 
 MODEL_REGISTRY = {
     "nllb": NllbTranslator,
@@ -24,7 +30,6 @@ MODELS_TO_EVALUATE: List[str] = [
     "mistral",
     "m2m100",
     "marian",
-    "t5",
     "nllb",
     "mbart50",
     "llama3.1",
