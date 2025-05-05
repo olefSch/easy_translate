@@ -64,6 +64,13 @@ class MBartTranslator(BaseTranslator):
         self.tokenizer: PreTrainedTokenizer = MBart50TokenizerFast.from_pretrained(
             self.MODEL_NAME, **tk_kwargs
         )
+
+        if self.source_lang not in self.tokenizer.lang_code_to_id:
+            raise ValueError(f"Unsupported source_lang code: '{self.source_lang}'")
+
+        if self.target_lang not in self.tokenizer.lang_code_to_id:
+            raise ValueError(f"Unsupported target_lang code: '{self.target_lang}'")
+
         self.tokenizer.src_lang = self.source_lang
 
         md_kwargs = model_kwargs or {}

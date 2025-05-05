@@ -1,10 +1,11 @@
 import logging
+import re
 from typing import Any, Dict, Optional, Union
 
 import torch
 from transformers import (
     AutoModelForSeq2SeqLM,
-    AutoTokenizer,
+    NllbTokenizerFast,
     PreTrainedModel,
     PreTrainedTokenizer,
 )
@@ -20,6 +21,8 @@ class NllbTranslator(BaseTranslator):
     """
 
     MODEL_NAME: str = "facebook/nllb-200-distilled-600M"
+
+    _CODE_RE = re.compile(r"^[a-z]{3}_[A-Za-z]{4}$")
 
     def __init__(
         self,
@@ -55,17 +58,18 @@ class NllbTranslator(BaseTranslator):
         self._validate_language_pair(source_lang, target_lang)
         self._validate_generation_params(max_length, num_beams)
 
-        self.source_lang = source_lang
-        self.target_lang = target_lang
-        self.max_length = max_length
-        self.num_beams = num_beams
+        if not self._CODE_RE.match(source_lang):
+            raise ValueError(f"Unsupported source_lang: '{source_lang}'")
+        if not self._CODE_RE.match(target_lang):
+            raise ValueError(f"Unsupported target_lang: '{target_lang}'")
+
         self.device = torch.device(device)
 
         tk_kwargs = tokenizer_kwargs or {}
-        self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(
+        self.tokenizer: PreTrainedTokenizer = NllbTokenizerFast.from_pretrained(
             self.MODEL_NAME, **tk_kwargs
         )
-        self.tokenizer.source_lang = self.source_lang
+        self.tokenizer.source_lang = source_lang
 
         md_kwargs = model_kwargs or {}
         self.model: PreTrainedModel = (
@@ -73,6 +77,11 @@ class NllbTranslator(BaseTranslator):
             .to(self.device)
             .eval()
         )
+
+        self.source_lang = source_lang
+        self.target_lang = target_lang
+        self.max_length = max_length
+        self.num_beams = num_beams
 
     def translate(self, text: str) -> str:
         """Translate a single sentence using the NLLB model.
