@@ -6,7 +6,6 @@ from evaluation.models.marianmt_model_translator import MarianTranslator
 from evaluation.models.mBART_50_model_translator import MBartTranslator
 from evaluation.models.nllb_model_translator import NllbTranslator
 
-# List out (TranslatorClass, minimal kwargs) for each implementation
 TRANSLATORS = [
     (MarianTranslator, {"source_lang": "en", "target_lang": "de", "device": "cpu"}),
     (M2M100Translator, {"source_lang": "en", "target_lang": "de", "device": "cpu"}),

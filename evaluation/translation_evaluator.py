@@ -6,7 +6,7 @@ from typing import Dict, List, Optional, Union
 import evaluate
 import pandas as pd
 
-from models.base_translator import BaseTranslator
+from .models.base_translator import BaseTranslator
 
 # Configure module‐level logger
 logger = logging.getLogger(__name__)
