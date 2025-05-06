@@ -51,24 +51,29 @@ class MarianTranslator(BaseTranslator):
             ValueError: If `source_lang` or `target_lang` are empty,
                 or if `max_length` or `num_beams` are not positive.
         """
+        # Validate provided language codes and generation settings
         self._validate_language_pair(source_lang, target_lang)
         self._validate_generation_params(max_length, num_beams)
 
+        # Store config and target device
         self.source_lang = source_lang
         self.target_lang = target_lang
         self.max_length = max_length
         self.num_beams = num_beams
         self.device = torch.device(device)
 
+        # Format the model name using the language codes
         model_name = self.MODEL_NAME_TEMPLATE.format(
             source=source_lang, target=target_lang
         )
 
+        # Load tokenizer with optional customization
         tk_kwargs = tokenizer_kwargs or {}
         self.tokenizer: PreTrainedTokenizer = MarianTokenizer.from_pretrained(
             model_name, **tk_kwargs
         )
 
+        # Load model with optional customization and put it on the specified device
         md_kwargs = model_kwargs or {}
         self.model: PreTrainedModel = (
             MarianMTModel.from_pretrained(model_name, **md_kwargs)
@@ -88,27 +93,30 @@ class MarianTranslator(BaseTranslator):
         Raises:
             TranslationError: If `text` is empty or generation fails.
         """
+        # Ensure non-empty input
         if not isinstance(text, str) or not text.strip():
             raise TranslationError("Input text must be a non-empty string")
 
+        # Tokenize input and send to device
         inputs = self.tokenizer([text], return_tensors="pt", padding=True).to(
             self.device
         )
 
-        # Generate
+        # Generate translated tokens with beam search
         try:
-            with torch.no_grad():
+            with torch.no_grad():  # Disable gradient computation for faster inference
                 output_ids = self.model.generate(
                     **inputs,
                     max_length=self.max_length,
                     num_beams=self.num_beams,
-                    early_stopping=True,
+                    early_stopping=True,  # Stop beam search early if all beams end
                 )
         except Exception as e:
+            # Wrap any errors from the model in a custom TranslationError
             logger.error("MarianMT generation error: %s", e)
             raise TranslationError(f"Translation failed: {e}") from e
 
-        # Decode and clean up
+        # Decode token IDs into human-readable text and clean whitespace
         tranlated = self.tokenizer.decode(
             output_ids[0], skip_special_tokens=True
         ).strip()

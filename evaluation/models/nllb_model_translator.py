@@ -55,22 +55,27 @@ class NllbTranslator(BaseTranslator):
                 `max_length` or `num_beams` are not positive integers.
 
         """
+        # Validate provided language codes and generation settings
         self._validate_language_pair(source_lang, target_lang)
         self._validate_generation_params(max_length, num_beams)
 
+        # Check format of language codes
         if not self._CODE_RE.match(source_lang):
             raise ValueError(f"Unsupported source_lang: '{source_lang}'")
         if not self._CODE_RE.match(target_lang):
             raise ValueError(f"Unsupported target_lang: '{target_lang}'")
 
+        # Prepare target device
         self.device = torch.device(device)
 
+        # Load tokenizer with optional customization
         tk_kwargs = tokenizer_kwargs or {}
         self.tokenizer: PreTrainedTokenizer = NllbTokenizerFast.from_pretrained(
             self.MODEL_NAME, **tk_kwargs
         )
-        self.tokenizer.source_lang = source_lang
+        self.tokenizer.source_lang = source_lang  # Set source language
 
+        # Load model with optional customization and put it on the specified device
         md_kwargs = model_kwargs or {}
         self.model: PreTrainedModel = (
             AutoModelForSeq2SeqLM.from_pretrained(self.MODEL_NAME, **md_kwargs)
@@ -78,6 +83,7 @@ class NllbTranslator(BaseTranslator):
             .eval()
         )
 
+        # Store config for use during generation
         self.source_lang = source_lang
         self.target_lang = target_lang
         self.max_length = max_length
@@ -95,26 +101,30 @@ class NllbTranslator(BaseTranslator):
         Raises:
             TranslationError: If `text` is empty or generation fails.
         """
+        # Ensure non-empty input
         if not isinstance(text, str) or not text.strip():
             raise TranslationError("Input text must be a non-empty string")
 
+        # Tokenize input and send to device
         inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(self.device)
 
+        # Get ID of target language to force decoder to generate in that language
         forced_bos = self.tokenizer.convert_tokens_to_ids(self.target_lang)
 
-        # Generate
+        # Generate translated tokens with beam search
         try:
             output_ids = self.model.generate(
                 **inputs,
                 forced_bos_token_id=forced_bos,
                 max_length=self.max_length,
                 num_beams=self.num_beams,
-                early_stopping=True,
+                early_stopping=True,  # Stop beam search early if all beams end
             )
         except Exception as e:
+            # Wrap any errors from the model in a custom TranslationError
             raise TranslationError(f"NLLB generation failed: {e}") from e
 
-        # Decode and clean up
+        # Decode token IDs into human-readable text and clean whitespace
         translated = self.tokenizer.decode(
             output_ids[0], skip_special_tokens=True
         ).strip()

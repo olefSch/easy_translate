@@ -15,6 +15,7 @@ from configs.config import (
 )
 from translation_evaluator import TranslationEvaluator
 
+# Set up logging to console with timestamp and severity
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
@@ -39,10 +40,15 @@ def load_language_mappings(path: Path) -> Dict[str, Any]:
     """
     if not path.exists():
         raise FileNotFoundError(f"Mappings not found: {path}")
+
+    # Parse the YAML file
     with path.open("r", encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
+
+    # Validate the structure
     if "language_mappings" not in cfg:
         raise KeyError(f"'language_mappings' not in {path}")
+
     return cfg["language_mappings"]
 
 
@@ -74,17 +80,20 @@ def evaluate_models(
         Exception: Any errors during dataset loading, translator instantiation,
             evaluation, or report generation are caught and logged per‐case.
     """
+    # Ensure output directory exists
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    # Loop over each model listed for evaluation
     for model_name in models:
         translator_cls = MODEL_REGISTRY.get(model_name)
         if translator_cls is None:
             logger.warning("Skipping unknown model '%s'.", model_name)
             continue
 
+        # Loop over language pairs available in the mappings
         for lang_pair, cfgs in mappings.items():
             if model_name not in cfgs:
-                continue
+                continue  # Skip if model config is not defined for this pair
 
             logger.info("Evaluating %s on %s", model_name, lang_pair)
             src_lang, tgt_lang = lang_pair.split("-", 1)
@@ -93,6 +102,7 @@ def evaluate_models(
                 cfgs[model_name].get("target"),
             )
 
+            # Ensure language codes are provided
             if not (src_code and tgt_code):
                 logger.error(
                     "Missing source/target in mapping for %s:%s—skipping.",
@@ -101,7 +111,7 @@ def evaluate_models(
                 )
                 continue
 
-            # Load dataset
+            # Load input and reference texts from the dataset
             try:
                 ds = load_dataset(dataset_name, lang_pair, split=split)
                 inputs = [ex["translation"][src_lang] for ex in ds]
@@ -120,7 +130,7 @@ def evaluate_models(
                 logger.exception("Failed to init translator %s; skipping.", model_name)
                 continue
 
-            # Register, evaluate, report
+            # Register the model and run evaluation
             model_id = f"{model_name}_{lang_pair}"
             evaluator.register_model(model_id, translator)
 
@@ -130,6 +140,7 @@ def evaluate_models(
                 logger.exception("Evaluation failed for %s; continuing.", model_id)
                 continue
 
+            # Save the evaluation report to disk
             report_file = output_dir / f"{model_id}_report.csv"
             try:
                 evaluator.generate_report(report_file, models=model_id)
@@ -140,12 +151,16 @@ def evaluate_models(
 def main() -> None:
     """Orchestrate loading configs, running evaluations, and saving reports."""
     try:
+        # Load YAML-based language configuration
         mappings = load_language_mappings(LANGUAGE_MAPPING_PATH)
     except Exception as e:
         logger.error("Aborting: %s", e)
         return
 
+    # Create a new evaluation orchestrator
     evaluator = TranslationEvaluator()
+
+    # Run evaluations on all registered model-language configurations
     evaluate_models(
         evaluator=evaluator,
         models=MODELS_TO_EVALUATE,

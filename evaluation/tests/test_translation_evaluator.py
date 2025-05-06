@@ -8,8 +8,6 @@ import evaluation.translation_evaluator as te_mod
 from evaluation.models.base_translator import BaseTranslator
 from evaluation.translation_evaluator import TranslationEvaluator
 
-te_mod.logger.propagate = True
-
 
 class DummyTranslator(BaseTranslator):
     """A translator that returns the source text unchanged."""
@@ -20,19 +18,20 @@ class DummyTranslator(BaseTranslator):
 
 @pytest.fixture
 def evaluator() -> TranslationEvaluator:
+    # Provide a fresh evaluator instance for each test
     return TranslationEvaluator()
 
 
 def test_scores_and_report(tmp_path: Path, evaluator: TranslationEvaluator):
-    # Arrange
+    # Register dummy translator and provide matching input/reference
     inputs = ["hello world", "goodbye"]
     references = ["hello world", "goodbye"]
     evaluator.register_model("dummy", DummyTranslator())
 
-    # Act
+    # Evaluate model performance on inputs
     results = evaluator.evaluate(inputs, references)
 
-    # Assert evaluate() results
+    # Ensure expected metrics are present and valid
     assert "dummy" in results
     bleu_score = results["dummy"]["bleu"]
     meteor_score = results["dummy"]["meteor"]
@@ -40,7 +39,7 @@ def test_scores_and_report(tmp_path: Path, evaluator: TranslationEvaluator):
         assert isinstance(score, float)
         assert 0.0 <= score <= 1.0
 
-    # Write and verify report
+    # Generate report and verify contents on disk
     report = tmp_path / "dummy_report.csv"
     evaluator.generate_report(report, models="dummy")
     assert report.exists()
@@ -52,6 +51,7 @@ def test_scores_and_report(tmp_path: Path, evaluator: TranslationEvaluator):
 
 
 def test_evaluate_length_mismatch(evaluator: TranslationEvaluator):
+    # Mismatched input/reference lengths should raise ValueError
     evaluator.register_model("dummy", DummyTranslator())
     with pytest.raises(ValueError) as excinfo:
         evaluator.evaluate(["one"], ["one", "two"])
@@ -59,6 +59,7 @@ def test_evaluate_length_mismatch(evaluator: TranslationEvaluator):
 
 
 def test_evaluate_unknown_model(evaluator: TranslationEvaluator):
+    # Evaluating an unregistered model should raise KeyError
     with pytest.raises(KeyError):
         evaluator.evaluate(["x"], ["x"], model_names=["not_registered"])
 
@@ -66,11 +67,13 @@ def test_evaluate_unknown_model(evaluator: TranslationEvaluator):
 def test_generate_report_without_evaluate(
     tmp_path: Path, evaluator: TranslationEvaluator
 ):
+    # Generating a report before running evaluation should raise ValueError
     with pytest.raises(ValueError):
         evaluator.generate_report(tmp_path / "no_results.csv")
 
 
 def test_register_model_validation(evaluator: TranslationEvaluator):
+    # Registering with empty name or None as model should raise ValueError
     with pytest.raises(ValueError):
         evaluator.register_model("", DummyTranslator())
     with pytest.raises(ValueError):
@@ -78,6 +81,7 @@ def test_register_model_validation(evaluator: TranslationEvaluator):
 
 
 def test_duplicate_registration_logs_warning(caplog, evaluator: TranslationEvaluator):
+    # Registering the same model name twice should log a warning
     caplog.set_level(logging.WARNING)
     evaluator.register_model("dup", DummyTranslator())
     evaluator.register_model("dup", DummyTranslator())
@@ -87,6 +91,7 @@ def test_duplicate_registration_logs_warning(caplog, evaluator: TranslationEvalu
 def test_multiple_models_evaluation_and_report(
     tmp_path: Path, evaluator: TranslationEvaluator
 ):
+    # Evaluate multiple models and ensure all results appear in the report
     evaluator.register_model("m1", DummyTranslator())
     evaluator.register_model("m2", DummyTranslator())
     inputs = ["a", "b"]
@@ -102,6 +107,7 @@ def test_multiple_models_evaluation_and_report(
 
 
 def test_filter_report_by_model(tmp_path: Path, evaluator: TranslationEvaluator):
+    # Generate report for a subset of evaluated models
     evaluator.register_model("m1", DummyTranslator())
     evaluator.register_model("m2", DummyTranslator())
     evaluator.evaluate(["x"], ["x"])
@@ -115,6 +121,7 @@ def test_filter_report_by_model(tmp_path: Path, evaluator: TranslationEvaluator)
 def test_report_write_failure(
     tmp_path: Path, evaluator: TranslationEvaluator, monkeypatch, caplog
 ):
+    # Simulate disk write failure and ensure it is logged as an error
     evaluator.register_model("dummy", DummyTranslator())
     evaluator.evaluate(["a"], ["a"])
 
@@ -130,18 +137,21 @@ def test_report_write_failure(
 
 
 def test_re_evaluation_updates_results(tmp_path: Path, evaluator: TranslationEvaluator):
+    # Confirm that running evaluate() again overwrites previous scores
     evaluator.register_model("dummy", DummyTranslator())
 
-    # First run with perfect match
+    # First run with matching input and reference
     evaluator.evaluate(["a"], ["a"])
     first_meteor = evaluator._results["dummy"]["meteor"]
 
-    # Second run with mismatch
+    # Second run with different values
     evaluator.evaluate(["x"], ["y"])
     second_meteor = evaluator._results["dummy"]["meteor"]
 
+    # Scores should differ between runs
     assert first_meteor != second_meteor
 
+    # Report should reflect updated scores
     report = tmp_path / "re_eval_report.csv"
     evaluator.generate_report(report, models="dummy")
     df = pd.read_csv(report, index_col="model")

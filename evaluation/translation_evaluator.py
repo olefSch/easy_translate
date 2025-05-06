@@ -8,7 +8,7 @@ import pandas as pd
 
 from .models.base_translator import BaseTranslator
 
-# Configure module‐level logger
+# Configure module-level logger for console output
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.propagate = False
@@ -35,8 +35,12 @@ class TranslationEvaluator:
     def __init__(self) -> None:
         """Initialize the evaluator with default metrics."""
 
-        self._registered_models: Dict[str, BaseTranslator] = {}
-        self._results: Dict[str, Dict[str, float]] = {}
+        self._registered_models: Dict[str, BaseTranslator] = (
+            {}
+        )  # Registered model instances
+        self._results: Dict[str, Dict[str, float]] = {}  # Cached evaluation results
+
+        # Load evaluation metrics from Hugging Face's evaluate library
         self._bleu = evaluate.load("bleu")
         self._meteor = evaluate.load("meteor")
 
@@ -56,6 +60,7 @@ class TranslationEvaluator:
             raise ValueError("Model instance must not be None.")
         if name in self._registered_models:
             logger.warning("Overwriting existing model '%s'.", name)
+
         self._registered_models[name] = model
         logger.info("Registered model '%s'.", name)
 
@@ -87,6 +92,7 @@ class TranslationEvaluator:
                 f"references length {len(references)}."
             )
 
+        # Determine which models to evaluate
         model_names = model_names or list(self._registered_models)
         for name in model_names:
             if name not in self._registered_models:
@@ -99,12 +105,16 @@ class TranslationEvaluator:
         )
         start_time = time.time()
 
+        # Format references as required by metric functions (List[List[str]])
         formatted_refs = [[r] for r in references]
 
         for name in model_names:
             model = self._registered_models[name]
+
+            # Translate all input texts with the current model
             translations = self._batch_translate(model, inputs)
 
+            # Compute BLEU and METEOR scores
             bleu_res = self._bleu.compute(
                 predictions=translations, references=formatted_refs
             )["bleu"]
@@ -112,6 +122,7 @@ class TranslationEvaluator:
                 predictions=translations, references=formatted_refs
             )["meteor"]
 
+            # Store results
             self._results[name] = {
                 "bleu": bleu_res,
                 "meteor": meteor_res,
@@ -148,7 +159,7 @@ class TranslationEvaluator:
         df.index.name = "model"
         df = df.round(4)
 
-        # filter if requested
+        # Filter the report to specific models if requested
         if models is not None:
             if isinstance(models, str):
                 models = [models]
@@ -157,10 +168,10 @@ class TranslationEvaluator:
                 logger.warning(f"⚠️ Requested model(s) not found: {missing}")
             df = df.loc[[m for m in models if m in df.index]]
 
-        # Print to console
+        # Print formatted results to the console
         logger.info("===== Evaluation Report =====\n%s", df.to_string())
 
-        # Save to CSV
+        # Attempt to write results to disk
         try:
             path = Path(file_path)
             df.to_csv(path)

@@ -29,7 +29,7 @@ class LLMTranslator(BaseTranslator):
     def __init__(
         self,
         model_name: str = "llama3.1:8b",
-        num_predict: int = 256,
+        num_predict: int = 512,
         source_lang: str = "English",
         target_lang: str = "German",
         stop: Optional[List[str]] = None,
@@ -52,20 +52,21 @@ class LLMTranslator(BaseTranslator):
             ValueError: If model_name, source_lang, or target_lang are empty,
                 or if num_predict is not positive.
         """
-        if not model_name:
-            raise ValueError("model_name must not be empty")
-        if num_predict <= 0:
-            raise ValueError("num_predict must be positive")
-        if not source_lang or not target_lang:
-            raise ValueError("source_lang and target_lang must not be empty")
+        # Basic validation
+        self._validate_language_pair(source_lang, target_lang)
+        self._validate_positive(num_predict)
 
+        # Use provided client or create a new one
         self.client: Client = client or Client()
         self.model_name: str = model_name
         self.num_predict: int = num_predict
 
+        # Stop sequences to tell the model when to stop generating
         self.stop: List[str] = stop if stop is not None else ["—"]
         self.source_lang: str = source_lang
         self.target_lang: str = target_lang
+
+        # Prompt template for constructing the translation prompt
         self.prompt_template: str = prompt_template or self.DEFAULT_TEMPLATE
 
     def translate(
@@ -83,10 +84,12 @@ class LLMTranslator(BaseTranslator):
         Raises:
             TranslationError: On any failure from the Ollama client.
         """
+        # Short-circuit on empty input
         if not text:
             logger.debug("Empty input text; returning empty string.")
             return ""
 
+        # Build the prompt by filling in the template with the language and text
         prompt = self.prompt_template.format(
             source_lang=self.source_lang,
             target_lang=self.target_lang,
@@ -95,6 +98,7 @@ class LLMTranslator(BaseTranslator):
         logger.debug("LLMTranslator prompt:\n%s", prompt)
 
         try:
+            # Call the Ollama model with the prompt and generation settings
             response: Dict[str, Any] = self.client.generate(
                 model=self.model_name,
                 prompt=prompt,
@@ -104,14 +108,17 @@ class LLMTranslator(BaseTranslator):
                 },
             )
         except Exception as e:
+            # Wrap any errors from Ollama client in a custom TranslationError
             logger.error("Ollama client error for model %s: %s", self.model_name, e)
             raise TranslationError(f"Ollama error: {e}") from e
 
+        # Extract the raw response string from the model output
         translated = response.get("response", "")
         if not isinstance(translated, str):
             logger.error("Invalid response format: %r", response)
             raise TranslationError(f"Invalid response format: {response!r}")
 
+        # Strip extra whitespace and return
         result = translated.strip()
         logger.debug("LLMTranslator result: %s", result)
         return result
