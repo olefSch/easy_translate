@@ -22,7 +22,9 @@ class Visualization:
         self.df = data.copy()
 
         # Clean model_id (e.g., remove "_report" suffix)
-        self.df["model_id"] = self.df["model_id"].str.replace("_report", "", regex=False)
+        self.df["model_id"] = self.df["model_id"].str.replace(
+            "_report", "", regex=False
+        )
 
         # Extract base_model and language_pair from model_id
         self.df["base_model"] = self.df["model_id"].apply(lambda x: x.split("_")[0])
@@ -30,7 +32,6 @@ class Visualization:
 
         # Map model type from base_model
         self.df["model_type"] = self.df["base_model"].map(model_types)
-        
 
     def get_bleu_score_table(self) -> pd.DataFrame:
         """
@@ -38,13 +39,13 @@ class Visualization:
         """
         return self.df.pivot(index="base_model", columns="language_pair", values="bleu")
 
-
     def get_meteor_score_table(self) -> pd.DataFrame:
         """
         Return a table of METEOR scores with base models as rows and language pairs as columns.
         """
-        return self.df.pivot(index="base_model", columns="language_pair", values="meteor")
-
+        return self.df.pivot(
+            index="base_model", columns="language_pair", values="meteor"
+        )
 
     def plot_average_scores_by_type(self) -> None:
         """
@@ -59,7 +60,9 @@ class Visualization:
 
         sns.set(style="whitegrid")
         plt.figure(figsize=(8, 5))
-        ax = sns.barplot(data=avg_by_type, x="metric", y="score", hue="model_type", palette="Set2")
+        ax = sns.barplot(
+            data=avg_by_type, x="metric", y="score", hue="model_type", palette="Set2"
+        )
 
         ax.set_title("Average BLEU and METEOR by Model Type")
         ax.set_ylabel("Average Score")
@@ -68,7 +71,6 @@ class Visualization:
         plt.legend(title="Model Type")
         plt.tight_layout()
         plt.show()
-
 
     def plot_grouped_scores(self) -> None:
         """
@@ -119,7 +121,6 @@ class Visualization:
         plt.tight_layout(rect=[0, 0, 1, 0.95])
         plt.show()
 
-
     def plot_scores_by_language_pair(self) -> None:
         """
         Plot bar chart of average BLEU and METEOR scores per language pair
@@ -135,11 +136,7 @@ class Visualization:
         sns.set(style="whitegrid")
         plt.figure(figsize=(12, 6))
         ax = sns.barplot(
-            data=avg_scores,
-            x="language_pair",
-            y="score",
-            hue="metric",
-            palette="Set2"
+            data=avg_scores, x="language_pair", y="score", hue="metric", palette="Set2"
         )
 
         ax.set_title("Average BLEU and METEOR Scores per Language Pair")
@@ -150,7 +147,6 @@ class Visualization:
         plt.legend(title="Metric")
         plt.tight_layout()
         plt.show()
-
 
     def plot_scores_by_language_pair_model_type(self) -> None:
         """

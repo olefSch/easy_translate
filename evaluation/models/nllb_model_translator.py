@@ -65,7 +65,11 @@ class NllbTranslator(BaseTranslator):
         if not self._CODE_RE.match(target_lang):
             raise ValueError(f"Unsupported target_lang: '{target_lang}'")
 
-        # Prepare target device
+        # Store config and target device
+        self.source_lang = source_lang
+        self.target_lang = target_lang
+        self.max_length = max_length
+        self.num_beams = num_beams
         self.device = torch.device(device)
 
         # Load tokenizer with optional customization
@@ -82,12 +86,6 @@ class NllbTranslator(BaseTranslator):
             .to(self.device)
             .eval()
         )
-
-        # Store config for use during generation
-        self.source_lang = source_lang
-        self.target_lang = target_lang
-        self.max_length = max_length
-        self.num_beams = num_beams
 
     def translate(self, text: str) -> str:
         """Translate a single sentence using the NLLB model.
@@ -122,6 +120,7 @@ class NllbTranslator(BaseTranslator):
             )
         except Exception as e:
             # Wrap any errors from the model in a custom TranslationError
+            logger.error("NLLB generation error: %s", e)
             raise TranslationError(f"NLLB generation failed: {e}") from e
 
         # Decode token IDs into human-readable text and clean whitespace

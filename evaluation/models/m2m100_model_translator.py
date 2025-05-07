@@ -55,7 +55,11 @@ class M2M100Translator(BaseTranslator):
         self._validate_language_pair(source_lang, target_lang)
         self._validate_generation_params(max_length, num_beams)
 
-        # Prepare target device
+        # Store config and target device
+        self.source_lang = source_lang
+        self.target_lang = target_lang
+        self.max_length = max_length
+        self.num_beams = num_beams
         self.device = torch.device(device)
 
         # Load tokenizer with optional customization
@@ -72,12 +76,6 @@ class M2M100Translator(BaseTranslator):
             .to(self.device)
             .eval()
         )
-
-        # Store config for use during generation
-        self.source_lang = source_lang
-        self.target_lang = target_lang
-        self.max_length = max_length
-        self.num_beams = num_beams
 
     def translate(self, text: str) -> str:
         """Translate a single sentence using the M2M100 model.
