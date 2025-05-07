@@ -64,15 +64,19 @@ class MBartTranslator(BaseTranslator):
 
         # Load tokenizer with optional customization
         tk_kwargs = tokenizer_kwargs or {}
-        self.tokenizer: PreTrainedTokenizer = MBart50TokenizerFast.from_pretrained(
-            self.MODEL_NAME, **tk_kwargs
+        self.tokenizer: PreTrainedTokenizer = (
+            MBart50TokenizerFast.from_pretrained(self.MODEL_NAME, **tk_kwargs)
         )
 
         # Check if the specified language codes are supported by the tokenizer
         if self.source_lang not in self.tokenizer.lang_code_to_id:
-            raise ValueError(f"Unsupported source_lang code: '{self.source_lang}'")
+            raise ValueError(
+                f"Unsupported source_lang code: '{self.source_lang}'"
+            )
         if self.target_lang not in self.tokenizer.lang_code_to_id:
-            raise ValueError(f"Unsupported target_lang code: '{self.target_lang}'")
+            raise ValueError(
+                f"Unsupported target_lang code: '{self.target_lang}'"
+            )
 
         # Set the tokenizer's source language
         self.tokenizer.src_lang = self.source_lang
@@ -80,7 +84,9 @@ class MBartTranslator(BaseTranslator):
         # Load model with optional customization and put it on the specified device
         md_kwargs = model_kwargs or {}
         self.model: PreTrainedModel = (
-            MBartForConditionalGeneration.from_pretrained(self.MODEL_NAME, **md_kwargs)
+            MBartForConditionalGeneration.from_pretrained(
+                self.MODEL_NAME, **md_kwargs
+            )
             .to(self.device)
             .eval()
         )
@@ -102,14 +108,18 @@ class MBartTranslator(BaseTranslator):
             raise TranslationError("Input text must be a non-empty string")
 
         # Tokenize input and send to device
-        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(self.device)
+        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(
+            self.device
+        )
 
         # Get ID of target language to force decoder to generate in that language
         forced_bos = self.tokenizer.lang_code_to_id.get(self.target_lang)
 
         # Generate translated tokens with beam search
         try:
-            with torch.no_grad():  # Disable gradient computation for faster inference
+            with (
+                torch.no_grad()
+            ):  # Disable gradient computation for faster inference
                 output_ids = self.model.generate(
                     **inputs,
                     forced_bos_token_id=forced_bos,

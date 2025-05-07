@@ -19,7 +19,9 @@ from translation_evaluator import TranslationEvaluator
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+handler.setFormatter(
+    logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+)
 logger.addHandler(handler)
 
 
@@ -127,7 +129,9 @@ def evaluate_models(
                 init_args = {"source_lang": src_code, "target_lang": tgt_code}
                 translator = translator_cls(**init_args)
             except Exception:
-                logger.exception("Failed to init translator %s; skipping.", model_name)
+                logger.exception(
+                    "Failed to init translator %s; skipping.", model_name
+                )
                 continue
 
             # Register the model and run evaluation
@@ -137,7 +141,9 @@ def evaluate_models(
             try:
                 evaluator.evaluate(inputs, refs, model_names=[model_id])
             except Exception:
-                logger.exception("Evaluation failed for %s; continuing.", model_id)
+                logger.exception(
+                    "Evaluation failed for %s; continuing.", model_id
+                )
                 continue
 
             # Save the evaluation report to disk

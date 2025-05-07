@@ -72,7 +72,9 @@ class M2M100Translator(BaseTranslator):
         # Load model with optional customization and put it on the specified device
         md_kwargs = model_kwargs or {}
         self.model: PreTrainedModel = (
-            M2M100ForConditionalGeneration.from_pretrained(self.MODEL_NAME, **md_kwargs)
+            M2M100ForConditionalGeneration.from_pretrained(
+                self.MODEL_NAME, **md_kwargs
+            )
             .to(self.device)
             .eval()
         )
@@ -94,14 +96,18 @@ class M2M100Translator(BaseTranslator):
             raise TranslationError("Input text must be a non-empty string")
 
         # Tokenize input and send to device
-        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(self.device)
+        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(
+            self.device
+        )
 
         # Get ID of target language to force decoder to generate in that language
         forced_bos = self.tokenizer.get_lang_id(self.target_lang)
 
         # Generate translated tokens with beam search
         try:
-            with torch.no_grad():  # Disable gradient computation for faster inference
+            with (
+                torch.no_grad()
+            ):  # Disable gradient computation for faster inference
                 output_ids = self.model.generate(
                     **inputs,
                     forced_bos_token_id=forced_bos,

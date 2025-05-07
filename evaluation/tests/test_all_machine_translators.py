@@ -8,15 +8,25 @@ from evaluation.models.nllb_model_translator import NllbTranslator
 
 # Parameterized list of translator classes with appropriate language configurations
 TRANSLATORS = [
-    (MarianTranslator, {"source_lang": "en", "target_lang": "de", "device": "cpu"}),
-    (M2M100Translator, {"source_lang": "en", "target_lang": "de", "device": "cpu"}),
+    (
+        MarianTranslator,
+        {"source_lang": "en", "target_lang": "de", "device": "cpu"},
+    ),
+    (
+        M2M100Translator,
+        {"source_lang": "en", "target_lang": "de", "device": "cpu"},
+    ),
     (
         MBartTranslator,
         {"source_lang": "en_XX", "target_lang": "de_DE", "device": "cpu"},
     ),
     (
         NllbTranslator,
-        {"source_lang": "eng_Latn", "target_lang": "deu_Latn", "device": "cpu"},
+        {
+            "source_lang": "eng_Latn",
+            "target_lang": "deu_Latn",
+            "device": "cpu",
+        },
     ),
 ]
 

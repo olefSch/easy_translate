@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.propagate = False
 _handler = logging.StreamHandler()
-_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+_handler.setFormatter(
+    logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+)
 logger.addHandler(_handler)
 
 
@@ -35,10 +37,12 @@ class TranslationEvaluator:
     def __init__(self) -> None:
         """Initialize the evaluator with default metrics."""
 
-        self._registered_models: Dict[str, BaseTranslator] = (
-            {}
-        )  # Registered model instances
-        self._results: Dict[str, Dict[str, float]] = {}  # Cached evaluation results
+        self._registered_models: Dict[
+            str, BaseTranslator
+        ] = {}  # Registered model instances
+        self._results: Dict[
+            str, Dict[str, float]
+        ] = {}  # Cached evaluation results
 
         # Load evaluation metrics from Hugging Face's evaluate library
         self._bleu = evaluate.load("bleu")
@@ -152,7 +156,9 @@ class TranslationEvaluator:
         """
 
         if not self._results:
-            raise ValueError("No evaluation results to report. Run evaluate() first.")
+            raise ValueError(
+                "No evaluation results to report. Run evaluate() first."
+            )
 
         # Convert results to DataFrame
         df = pd.DataFrame.from_dict(self._results, orient="index")

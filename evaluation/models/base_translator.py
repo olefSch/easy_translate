@@ -33,12 +33,16 @@ class BaseTranslator(ABC):
         if value <= 0:
             raise ValueError(f"`{name}` must be > 0 (got {value})")
 
-    def _validate_language_pair(self, source_lang: str, target_lang: str) -> None:
+    def _validate_language_pair(
+        self, source_lang: str, target_lang: str
+    ) -> None:
         """Raise ValueError if either language code is empty."""
         self._validate_non_empty("source_lang", source_lang)
         self._validate_non_empty("target_lang", target_lang)
 
-    def _validate_generation_params(self, max_length: int, num_beams: int) -> None:
+    def _validate_generation_params(
+        self, max_length: int, num_beams: int
+    ) -> None:
         """Raise ValueError if generation params are invalid."""
         self._validate_positive("max_length", max_length)
         self._validate_positive("num_beams", num_beams)

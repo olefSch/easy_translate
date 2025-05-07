@@ -76,7 +76,9 @@ def test_result_is_stripped(name, factory, monkeypatch):
 
 
 @pytest.mark.parametrize("name,factory", LLM_TRANSLATORS)
-def test_client_exception_becomes_translation_error(name, factory, monkeypatch):
+def test_client_exception_becomes_translation_error(
+    name, factory, monkeypatch
+):
     # Simulate an error during model invocation
     def error(*args, **kwargs):
         raise RuntimeError("network down")

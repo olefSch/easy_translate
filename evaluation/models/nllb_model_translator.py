@@ -74,8 +74,8 @@ class NllbTranslator(BaseTranslator):
 
         # Load tokenizer with optional customization
         tk_kwargs = tokenizer_kwargs or {}
-        self.tokenizer: PreTrainedTokenizer = NllbTokenizerFast.from_pretrained(
-            self.MODEL_NAME, **tk_kwargs
+        self.tokenizer: PreTrainedTokenizer = (
+            NllbTokenizerFast.from_pretrained(self.MODEL_NAME, **tk_kwargs)
         )
         self.tokenizer.source_lang = source_lang  # Set source language
 
@@ -104,7 +104,9 @@ class NllbTranslator(BaseTranslator):
             raise TranslationError("Input text must be a non-empty string")
 
         # Tokenize input and send to device
-        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(self.device)
+        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(
+            self.device
+        )
 
         # Get ID of target language to force decoder to generate in that language
         forced_bos = self.tokenizer.convert_tokens_to_ids(self.target_lang)

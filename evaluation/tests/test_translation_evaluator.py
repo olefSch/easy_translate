@@ -46,7 +46,9 @@ def test_scores_and_report(tmp_path: Path, evaluator: TranslationEvaluator):
     expected_bleu = round(bleu_score, 4)
     expected_meteor = round(meteor_score, 4)
     assert pytest.approx(expected_bleu, rel=1e-6) == df.loc["dummy", "bleu"]
-    assert pytest.approx(expected_meteor, rel=1e-6) == df.loc["dummy", "meteor"]
+    assert (
+        pytest.approx(expected_meteor, rel=1e-6) == df.loc["dummy", "meteor"]
+    )
 
 
 def test_evaluate_length_mismatch(evaluator: TranslationEvaluator):
@@ -79,7 +81,9 @@ def test_register_model_validation(evaluator: TranslationEvaluator):
         evaluator.register_model("dummy", None)
 
 
-def test_duplicate_registration_logs_warning(caplog, evaluator: TranslationEvaluator):
+def test_duplicate_registration_logs_warning(
+    caplog, evaluator: TranslationEvaluator
+):
     # Registering the same model name twice should log a warning
     caplog.set_level(logging.WARNING)
     evaluator.register_model("dup", DummyTranslator())
@@ -105,7 +109,9 @@ def test_multiple_models_evaluation_and_report(
     assert set(df.index) == {"m1", "m2"}
 
 
-def test_filter_report_by_model(tmp_path: Path, evaluator: TranslationEvaluator):
+def test_filter_report_by_model(
+    tmp_path: Path, evaluator: TranslationEvaluator
+):
     # Generate report for a subset of evaluated models
     evaluator.register_model("m1", DummyTranslator())
     evaluator.register_model("m2", DummyTranslator())
@@ -135,7 +141,9 @@ def test_report_write_failure(
     assert "Failed to write CSV report" in caplog.text
 
 
-def test_re_evaluation_updates_results(tmp_path: Path, evaluator: TranslationEvaluator):
+def test_re_evaluation_updates_results(
+    tmp_path: Path, evaluator: TranslationEvaluator
+):
     # Confirm that running evaluate() again overwrites previous scores
     evaluator.register_model("dummy", DummyTranslator())
 
@@ -154,4 +162,7 @@ def test_re_evaluation_updates_results(tmp_path: Path, evaluator: TranslationEva
     report = tmp_path / "re_eval_report.csv"
     evaluator.generate_report(report, models="dummy")
     df = pd.read_csv(report, index_col="model")
-    assert pytest.approx(round(second_meteor, 4), rel=1e-6) == df.loc["dummy", "meteor"]
+    assert (
+        pytest.approx(round(second_meteor, 4), rel=1e-6)
+        == df.loc["dummy", "meteor"]
+    )

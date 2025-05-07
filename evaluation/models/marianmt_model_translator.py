@@ -104,7 +104,9 @@ class MarianTranslator(BaseTranslator):
 
         # Generate translated tokens with beam search
         try:
-            with torch.no_grad():  # Disable gradient computation for faster inference
+            with (
+                torch.no_grad()
+            ):  # Disable gradient computation for faster inference
                 output_ids = self.model.generate(
                     **inputs,
                     max_length=self.max_length,

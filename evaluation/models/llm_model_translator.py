@@ -109,7 +109,9 @@ class LLMTranslator(BaseTranslator):
             )
         except Exception as e:
             # Wrap any errors from Ollama client in a custom TranslationError
-            logger.error("Ollama client error for model %s: %s", self.model_name, e)
+            logger.error(
+                "Ollama client error for model %s: %s", self.model_name, e
+            )
             raise TranslationError(f"Ollama error: {e}") from e
 
         # Extract the raw response string from the model output

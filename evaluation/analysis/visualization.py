@@ -27,8 +27,12 @@ class Visualization:
         )
 
         # Extract base_model and language_pair from model_id
-        self.df["base_model"] = self.df["model_id"].apply(lambda x: x.split("_")[0])
-        self.df["language_pair"] = self.df["model_id"].apply(lambda x: x.split("_")[1])
+        self.df["base_model"] = self.df["model_id"].apply(
+            lambda x: x.split("_")[0]
+        )
+        self.df["language_pair"] = self.df["model_id"].apply(
+            lambda x: x.split("_")[1]
+        )
 
         # Map model type from base_model
         self.df["model_type"] = self.df["base_model"].map(model_types)
@@ -37,7 +41,9 @@ class Visualization:
         """
         Return a table of BLEU scores with base models as rows and language pairs as columns.
         """
-        return self.df.pivot(index="base_model", columns="language_pair", values="bleu")
+        return self.df.pivot(
+            index="base_model", columns="language_pair", values="bleu"
+        )
 
     def get_meteor_score_table(self) -> pd.DataFrame:
         """
@@ -61,7 +67,11 @@ class Visualization:
         sns.set(style="whitegrid")
         plt.figure(figsize=(8, 5))
         ax = sns.barplot(
-            data=avg_by_type, x="metric", y="score", hue="model_type", palette="Set2"
+            data=avg_by_type,
+            x="metric",
+            y="score",
+            hue="model_type",
+            palette="Set2",
         )
 
         ax.set_title("Average BLEU and METEOR by Model Type")
@@ -112,7 +122,9 @@ class Visualization:
 
         # Shared legend
         handles, labels = axes[1].get_legend_handles_labels()
-        fig.legend(handles, labels, title="Model Type", loc="upper center", ncol=3)
+        fig.legend(
+            handles, labels, title="Model Type", loc="upper center", ncol=3
+        )
         for ax in axes:
             legend = ax.get_legend()
             if legend:
@@ -130,13 +142,19 @@ class Visualization:
             self.df.groupby("language_pair")[["bleu", "meteor"]]
             .mean()
             .reset_index()
-            .melt(id_vars="language_pair", var_name="metric", value_name="score")
+            .melt(
+                id_vars="language_pair", var_name="metric", value_name="score"
+            )
         )
 
         sns.set(style="whitegrid")
         plt.figure(figsize=(12, 6))
         ax = sns.barplot(
-            data=avg_scores, x="language_pair", y="score", hue="metric", palette="Set2"
+            data=avg_scores,
+            x="language_pair",
+            y="score",
+            hue="metric",
+            palette="Set2",
         )
 
         ax.set_title("Average BLEU and METEOR Scores per Language Pair")
@@ -188,7 +206,9 @@ class Visualization:
 
         # Shared legend
         handles, labels = axes[1].get_legend_handles_labels()
-        fig.legend(handles, labels, title="Model Type", loc="upper center", ncol=3)
+        fig.legend(
+            handles, labels, title="Model Type", loc="upper center", ncol=3
+        )
         for ax in axes:
             legend = ax.get_legend()
             if legend:
