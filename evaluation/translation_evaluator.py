@@ -11,7 +11,6 @@ from .models.base_translator import BaseTranslator
 # Configure module-level logger for console output
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-logger.propagate = False
 _handler = logging.StreamHandler()
 _handler.setFormatter(
     logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")

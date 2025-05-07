@@ -54,7 +54,7 @@ class LLMTranslator(BaseTranslator):
         """
         # Basic validation
         self._validate_language_pair(source_lang, target_lang)
-        self._validate_positive(num_predict)
+        self._validate_positive("num_predict", num_predict)
 
         # Use provided client or create a new one
         self.client: Client = client or Client()
