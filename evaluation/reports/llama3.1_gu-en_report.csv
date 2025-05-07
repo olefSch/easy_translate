@@ -1,0 +1,2 @@
+model,bleu,meteor
+llama3.1_gu-en,0.0951,0.3897

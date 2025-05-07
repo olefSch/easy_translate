@@ -1,0 +1,72 @@
+language_mappings:
+  de-en:
+    nllb:      {source: deu_Latn,  target: eng_Latn}
+    m2m100:    {source: de,        target: en}
+    mbart50:   {source: de_DE,     target: en_XX}
+    marian:    {source: de,        target: en}
+
+    llama3.2:  {source: German,    target: English}
+    llama3.1:  {source: German,    target: English}
+    gemma:     {source: German,    target: English}
+    phi3:      {source: German,    target: English}
+    mistral:   {source: German,    target: English}
+
+  fi-en:
+    nllb:      {source: fin_Latn,  target: eng_Latn}
+    m2m100:    {source: fi,        target: en}
+    mbart50:   {source: fi_FI,     target: en_XX}
+    marian:    {source: fi,        target: en}
+
+    llama3.2:  {source: Finnish,   target: English}
+    llama3.1:  {source: Finnish,   target: English}
+    gemma:     {source: Finnish,   target: English}
+    phi3:      {source: Finnish,   target: English}
+    mistral:   {source: Finnish,   target: English}
+
+  gu-en:
+    nllb:      {source: guj_Gujr,  target: eng_Latn}
+    m2m100:    {source: gu,        target: en}
+    mbart50:   {source: gu_IN,     target: en_XX}
+    marian:    {source: gu,        target: en}       
+
+    llama3.2:  {source: Gujarati,  target: English}
+    llama3.1:  {source: Gujarati,  target: English}
+    gemma:     {source: Gujarati,  target: English}
+    phi3:      {source: Gujarati,  target: English}
+    mistral:   {source: Gujarati,  target: English}
+
+  lt-en:
+    nllb:      {source: lit_Latn,  target: eng_Latn}
+    m2m100:    {source: lt,        target: en}
+    mbart50:   {source: lt_LT,     target: en_XX}
+    marian:    {source: lt,        target: en}        
+
+    llama3.2:  {source: Lithuanian,target: English}
+    llama3.1:  {source: Lithuanian,target: English}
+    gemma:     {source: Lithuanian,target: English}
+    phi3:      {source: Lithuanian,target: English}
+    mistral:   {source: Lithuanian,target: English}
+
+  ru-en:
+    nllb:      {source: rus_Cyrl,  target: eng_Latn}
+    m2m100:    {source: ru,        target: en}
+    mbart50:   {source: ru_RU,     target: en_XX}
+    marian:    {source: ru,        target: en}
+
+    llama3.2:  {source: Russian,   target: English}
+    llama3.1:  {source: Russian,   target: English}
+    gemma:     {source: Russian,   target: English}
+    phi3:      {source: Russian,   target: English}
+    mistral:   {source: Russian,   target: English}
+
+  zh-en:
+    nllb:      {source: zho_Hans,  target: eng_Latn}
+    m2m100:    {source: zh,        target: en}
+    mbart50:   {source: zh_CN,     target: en_XX}
+    marian:    {source: zh,        target: en}
+
+    llama3.2:  {source: Chinese,   target: English}
+    llama3.1:  {source: Chinese,   target: English}
+    gemma:     {source: Chinese,   target: English}
+    phi3:      {source: Chinese,   target: English}
+    mistral:   {source: Chinese,   target: English}
