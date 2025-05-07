@@ -1,9 +1,15 @@
 from functools import partial
+import os
 
 import pytest
 
 from evaluation.models.base_translator import TranslationError
 from evaluation.models.llm_model_translator import LLMTranslator
+
+pytestmark = pytest.mark.skipif(
+    os.environ.get("CI") == "true",
+    reason="Skipping Ollama-dependent tests in CI",
+)
 
 # List of LLMTranslator factories for different models to test in parameterized form
 LLM_TRANSLATORS = [
