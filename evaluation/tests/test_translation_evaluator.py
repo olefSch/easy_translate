@@ -4,7 +4,6 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-import evaluation.translation_evaluator as te_mod
 from evaluation.models.base_translator import BaseTranslator
 from evaluation.translation_evaluator import TranslationEvaluator
 
