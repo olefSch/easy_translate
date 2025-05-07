@@ -7,7 +7,9 @@ requires-python = ">=3.13"
 dependencies = [
     "huggingface>=0.0.1",
     "pandas>=2.0.0",
-    "ollama>=0.4",
+    "ollama>=0.4.1",
+    "evaluate>=0.4.1",
+    "torch>=2.6.0"
 ]
 
 [dependency-groups]
