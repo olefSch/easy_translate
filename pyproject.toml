@@ -3,21 +3,20 @@ name = "easy-nlp-translate"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11, <=3.12"
 dependencies = [
+    "datasets>=3.6.0",
     "huggingface>=0.0.1",
-    "datasets==2.18.0", 
-    "evaluate==0.4.3",
-    "matplotlib==3.10.1",
-    "ollama==0.4.8",
-    "pandas==2.2.3",
-    "PyYAML==6.0.2",
-    "seaborn==0.13.2",
-    "torch==2.6.0",
-    "transformers==4.50.3",
-    "nltk==3.9.1",
-    "sentencepiece==0.2.0",
-    "protobuf==6.30.2",
+    "matplotlib>=3.10.3",
+    "nltk>=3.9.1",
+    "ollama>=0.4.8",
+    "pandas>=2.2.3",
+    "protobuf>=6.31.0",
+    "pyyaml>=6.0.2",
+    "seaborn>=0.13.2",
+    "sentencepiece>=0.2.0",
+    "torch>=2.7.0",
+    "transformers>=4.51.3",
 ]
 
 [dependency-groups]
