@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
 from typing import Optional 
 
 class TranslatorBase(ABC):
+
+    LANGUAGE_CODE_PAIRS: dict[str, str] | list = NotImplemented
 
     def __init__(self, target_lang: str, source_lang: Optional[str] = None): 
         """
@@ -13,10 +14,42 @@ class TranslatorBase(ABC):
             source_lang (Optional[str], optional): The source language code (e.g., 'en' for English). 
                                                    Defaults to None (implying auto-detection).
         """
+        self._validate_language_pair(source_lang, target_lang)
+
         self.source_lang = source_lang
         self.target_lang = target_lang
 
         print(f"Translator initialized with source language: {self.source_lang if self.source_lang is not None else 'auto'} and target language: {self.target_lang}")
+
+
+
+    @staticmethod
+    def _validate_language_pair(source_lang: Optional[str], target_lang: str):
+        """
+        Validate the source and target language pair.
+
+        Args:
+            source_lang (Optional[str]): The source language code.
+            target_lang (str): The target language code.
+
+        Raises:
+            NotImplementedError: If the source language is not provided and auto-detection is not implemented.
+        """
+        raise NotImplementedError("This method should be implemented in subclasses.")
+
+    @staticmethod
+    def _validate_basic_text_to_translate(text: str):
+        """
+        Validate the text to be translated.
+
+        Args:
+            text (str): The text to be validated.
+
+        Raises:
+            ValueError: If the text is empty or not a string.
+        """
+        if not isinstance(text, str) or not text.strip():
+            raise ValueError("Text to translate must be a non-empty string.")
 
     @abstractmethod
     def translate(self, text: str) -> str:
@@ -29,22 +62,8 @@ class TranslatorBase(ABC):
         Returns:
             str: The translated text.
         """
-        pass
+        raise NotImplementedError("This method should be implemented in subclasses.")
 
-    @abstractmethod
-    def _detect_language(self, text: str) -> str:
-        """
-        Detect the language of the given text.
-
-        Args:
-            text (str): The text whose language is to be detected.
-
-        Returns:
-            str: The detected language code.
-        """
-        pass
-
-    @abstractmethod
     def translate_batch(self, texts: list) -> list:
         """
         Translate a batch of texts from source language to target language.
@@ -55,30 +74,7 @@ class TranslatorBase(ABC):
         Returns:
             list: A list of translated texts.
         """
-        pass
+        for text in texts:
+            self._validate_basic_text_to_translate(text)
 
-    @abstractmethod
-    def _generate(self, input: str) -> Iterable:
-        """
-        Generate a translation for the given input.
-
-        Args:
-            input (str): The input text to be translated.
-
-        Returns:
-            str: The generated model output
-        """
-        pass
-
-    @abstractmethod
-    def _post_process(self, raw_response: Iterable) -> str:
-        """
-        Post-process the generated output.
-
-        Args:
-            output (str): The generated output to be post-processed.
-
-        Returns:
-            str: The post-processed output.
-        """
-        pass
+        return [self.translate(text) for text in texts]
