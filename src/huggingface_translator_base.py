@@ -2,8 +2,9 @@ import logging
 from .translator_base import TranslatorBase
 from typing import Optional, Union, Any
 
+from transformers import PreTrainedTokenizer, PreTrainedModel
+
 import torch
-from transformers import PreTrainedModel, PreTrainedTokenizer
 
 logger = logging.getLogger(__name__)
 
@@ -14,10 +15,12 @@ class HuggingFaceTranslator(TranslatorBase):
     """
 
     def __init__(
-        self, 
+        self,
         target_lang: str,
         source_lang: Optional[str] = None,
-        device: Optional[Union[str, torch.device]] = "cuda" if torch.cuda.is_available() else "cpu",
+        device: Optional[Union[str, torch.device]] = "cuda"
+        if torch.cuda.is_available()
+        else "cpu",
         max_lenght: Optional[int] = 512,
         num_beams: Optional[int] = 4,
         tokenizer_kwargs: Optional[dict[str, Any]] = None,
@@ -48,14 +51,13 @@ class HuggingFaceTranslator(TranslatorBase):
         self.max_length = max_lenght
         self.num_beams = num_beams
 
-        self.tokenizer: PreTrainedTokenizer = self._init_tokenizer(tokenizer_kwargs)
+        self.tokenizer: PreTrainedTokenizer = self._init_tokenizer(
+            tokenizer_kwargs
+        )
         self.model: PreTrainedModel = self._init_model(model_kwargs)
 
-
     def _validate_generation_parameters(
-        self, 
-        max_length: Optional[int], 
-        num_beams: Optional[int]
+        self, max_length: Optional[int], num_beams: Optional[int]
     ):
         """
         Validates the generation parameters.
@@ -65,35 +67,37 @@ class HuggingFaceTranslator(TranslatorBase):
         Raises:
             ValueError: If max_length or num_beams is not a positive integer.
         """
-        if max_length is not None and (not isinstance(max_length, int) or max_length <= 0):
+        if max_length is not None and (
+            not isinstance(max_length, int) or max_length <= 0
+        ):
             raise ValueError("max_length must be a positive integer.")
-        if num_beams is not None and (not isinstance(num_beams, int) or num_beams <= 0):
+        if num_beams is not None and (
+            not isinstance(num_beams, int) or num_beams <= 0
+        ):
             raise ValueError("num_beams must be a positive integer.")
 
-
-    def _init_tokenizer(self, tokenizer_kwargs: Optional[dict[str, Any]] = None) -> PreTrainedTokenizer:
+    def _init_tokenizer(
+        self, tokenizer_kwargs: Optional[dict[str, Any]] = None
+    ) -> PreTrainedTokenizer:
         """
         Initialize the tokenizer.
 
         Args:
             tokenizer_kwargs (Optional[dict[str, Any]]): Additional arguments for the tokenizer.
-
-        Returns:
-            PreTrainedTokenizer: The initialized tokenizer.
         """
-        raise NotImplementedError("This method should be implemented in subclasses.")
+        raise NotImplementedError(
+            "This method should be implemented in subclasses."
+        )
 
-
-    def _init_model(self, model_kwargs: Optional[dict[str, Any]] = None) -> PreTrainedModel:
+    def _init_model(
+        self, model_kwargs: Optional[dict[str, Any]] = None
+    ) -> PreTrainedModel:
         """
         Initialize the model.
 
         Args:
             model_kwargs (Optional[dict[str, Any]]): Additional arguments for the model.
-
-        Returns:
-            PreTrainedModel: The initialized model.
         """
-        raise NotImplementedError("This method should be implemented in subclasses.")
-
-
+        raise NotImplementedError(
+            "This method should be implemented in subclasses."
+        )

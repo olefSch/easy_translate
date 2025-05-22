@@ -1,12 +1,14 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Optional 
+from typing import Optional
 
-from langdetect import detect, LangDetectException
+from langdetect import detect
 
 from .config import available_language_codes
+from .exceptions import DetectionError
 
 logger = logging.getLogger(__name__)
+
 
 class TranslatorBase(ABC):
     """
@@ -24,9 +26,11 @@ class TranslatorBase(ABC):
         target_lang (str): The target language code for translation.
     """
 
-    LANGUAGE_CODES: list[str] = available_language_codes # needs to be overwritten in smaller huggingface model classes
+    LANGUAGE_CODES: list[str] = (
+        available_language_codes  # needs to be overwritten in smaller huggingface model classes
+    )
 
-    def __init__(self, target_lang: str, source_lang: Optional[str] = None): 
+    def __init__(self, target_lang: str, source_lang: Optional[str] = None):
         """
         Initializes the translator with target and optional source languages.
 
@@ -36,7 +40,7 @@ class TranslatorBase(ABC):
             source_lang: The language code of the source text
                 (e.g., 'en' for English). Defaults to None, implying
                 auto-detection will be attempted by subclasses or specific methods.
-        """     
+        """
         self._validate_language_pair(source_lang, target_lang)
 
         self.source_lang = source_lang
@@ -47,7 +51,6 @@ class TranslatorBase(ABC):
             f"{self.source_lang if self.source_lang is not None else 'auto-detect'} "
             f"and target language: {self.target_lang}"
         )
-
 
     def _validate_langauge(self, lang: str):
         """
@@ -61,7 +64,9 @@ class TranslatorBase(ABC):
                 `self.LANGUAGE_CODES`.
         """
         if lang not in self.LANGUAGE_CODES:
-            raise ValueError(f"Language '{lang}' is not supported. Supported languages are: {self.LANGUAGE_CODES}")
+            raise ValueError(
+                f"Language '{lang}' is not supported. Supported languages are: {self.LANGUAGE_CODES}"
+            )
 
     def detect_language(self, text: str) -> str:
         """
@@ -83,14 +88,18 @@ class TranslatorBase(ABC):
 
         try:
             lang = detect(text)
-        except LangDetectException as e:
-            raise LangDetectException(f"Language detection failed: {e}")
+        except Exception as e:
+            raise DetectionError(
+                f"Language detection failed for text snippet '{text[:50]}...': Original error: {str(e)}"
+            ) from e
 
         self._validate_langauge(lang)
 
         return lang
 
-    def _validate_language_pair(self, source_lang: Optional[str], target_lang: str):
+    def _validate_language_pair(
+        self, source_lang: Optional[str], target_lang: str
+    ):
         """
         Validates the source and target language pair.
 
@@ -111,19 +120,14 @@ class TranslatorBase(ABC):
             NotImplementedError: If `source_lang` is None and language
                 auto-detection capability (tested by `self.detect_language("test")`)
                 is not properly implemented or fails its basic test.
-        """       
+        """
         self._validate_langauge(target_lang)
         if source_lang is not None:
             self._validate_langauge(source_lang)
-        else:
-            try:
-                self.detect_language("test")
-            except NotImplementedError as e:
-                raise NotImplementedError(f"Auto-detection is not implemented: {e}")
 
         if source_lang == target_lang:
             raise ValueError("Source and target languages cannot be the same.")
-    
+
     @staticmethod
     def _validate_basic_text_to_translate(text: str):
         """
@@ -149,7 +153,9 @@ class TranslatorBase(ABC):
         Returns:
             str: The translated text.
         """
-        raise NotImplementedError("This method should be implemented in subclasses.")
+        raise NotImplementedError(
+            "This method should be implemented in subclasses."
+        )
 
     def translate_batch(self, texts: list) -> list:
         """

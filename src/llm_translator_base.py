@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 
 class LLMTranslator(TranslatorBase):
-
     AVAILABLE_MODELS: list[str] = NotImplemented
     TEMPLATES_DIR: Path = SHARED_LLM_PROMPT_TEMPLATES_DIR
     LANGUAGE_MAPPER: dict[str, str] = language_code_to_name_map
@@ -41,7 +40,7 @@ class LLMTranslator(TranslatorBase):
                 Defaults to "default", which uses the default prompt template.
         """
         super().__init__(target_lang, source_lang)
- 
+
         self._validate_model_name(model_name)
         self.model_name = model_name
         self.credentials = self._get_credentials()
@@ -50,7 +49,9 @@ class LLMTranslator(TranslatorBase):
         try:
             self.prompt_style: PromptStyle = PromptStyle.from_code(prompt_type)
         except ValueError:
-            raise ValueError(f"Prompt type '{prompt_type}' is not available. Avaliable types are: {PromptStyle.get_available_codes()}")
+            raise ValueError(
+                f"Prompt type '{prompt_type}' is not available. Avaliable types are: {PromptStyle.get_available_codes()}"
+            )
 
         self.prompt: Template = self._init_prompt()
 
@@ -66,14 +67,15 @@ class LLMTranslator(TranslatorBase):
             prompt_template = file.read()
         return Template(prompt_template)
 
-
     def _init_prompt(self) -> Template:
         """
         Initializes the prompt template based on the selected prompt style.
         Returns:
             Template: A Jinja2 Template object initialized with the content of the prompt file.
         """
-        prompt_path: Path = self.TEMPLATES_DIR / self.prompt_style.template_filename
+        prompt_path: Path = (
+            self.TEMPLATES_DIR / self.prompt_style.template_filename
+        )
 
         logger.info(f"Loading prompt template from {prompt_path}")
 
@@ -88,7 +90,9 @@ class LLMTranslator(TranslatorBase):
             ValueError: If the model name is not found in `self.AVAILABLE_MODELS`.
         """
         if model_name not in self.AVAILABLE_MODELS:
-            raise ValueError(f"Model '{model_name}' is not available. Available models are: {self.AVAILABLE_MODELS}")
+            raise ValueError(
+                f"Model '{model_name}' is not available. Available models are: {self.AVAILABLE_MODELS}"
+            )
 
     def _render_prompt(self, text_to_translate: str) -> str:
         """
@@ -103,22 +107,32 @@ class LLMTranslator(TranslatorBase):
         if self.source_lang is None:
             source_lang = self.detect_language(text_to_translate)
             if source_lang is None:
-                raise ValueError("Source language could not be detected. Please provide a valid source language.")
+                raise ValueError(
+                    "Source language could not be detected. Please provide a valid source language."
+                )
         else:
             source_lang = self.source_lang
 
         long_source_lang = self.LANGUAGE_MAPPER.get(source_lang, source_lang)
-        long_target_lang = self.LANGUAGE_MAPPER.get(self.target_lang, self.target_lang)
+        long_target_lang = self.LANGUAGE_MAPPER.get(
+            self.target_lang, self.target_lang
+        )
 
-        return self.prompt.render(source_lang=long_source_lang, target_lang=long_target_lang, text_to_translate=text_to_translate)
-    
+        return self.prompt.render(
+            source_lang=long_source_lang,
+            target_lang=long_target_lang,
+            text_to_translate=text_to_translate,
+        )
+
     @abstractmethod
     def _get_credentials(self):
         """
         Retrieves the credentials needed to access the model.
         This method should be implemented in subclasses to provide the necessary credentials.
         """
-        raise NotImplementedError("This method should be implemented in subclasses.")
+        raise NotImplementedError(
+            "This method should be implemented in subclasses."
+        )
 
     @abstractmethod
     def _init_model(self, model_name: str):
@@ -130,7 +144,9 @@ class LLMTranslator(TranslatorBase):
         Returns:
             The initialized model object.
         """
-        raise NotImplementedError("This method should be implemented in subclasses.")
+        raise NotImplementedError(
+            "This method should be implemented in subclasses."
+        )
 
     @abstractmethod
     def _generate(self, input: str) -> Iterable:
@@ -142,7 +158,9 @@ class LLMTranslator(TranslatorBase):
         Returns:
             Iterable: An iterable containing the generated response.
         """
-        raise NotImplementedError("This method should be implemented in subclasses.")
+        raise NotImplementedError(
+            "This method should be implemented in subclasses."
+        )
 
     @abstractmethod
     def _post_process(self, raw_response: Iterable) -> str:
@@ -154,7 +172,9 @@ class LLMTranslator(TranslatorBase):
         Returns:
             str: The final translated text.
         """
-        raise NotImplementedError("This method should be implemented in subclasses.")
+        raise NotImplementedError(
+            "This method should be implemented in subclasses."
+        )
 
     def translate(self, text: str) -> str:
         """
@@ -181,7 +201,7 @@ class LLMTranslator(TranslatorBase):
         LLMTranslator._validate_basic_text_to_translate(text)
 
         rendered_prompt = self._render_prompt(text_to_translate=text)
-        
+
         logger.debug(
             f"LLM '{self.model_name}' ({self.__class__.__name__}) - "
             f"Style '{self.prompt_style.name}' - Final Prompt: {rendered_prompt}"
@@ -189,6 +209,8 @@ class LLMTranslator(TranslatorBase):
 
         raw_llm_output = self._generate(rendered_prompt)
         translated_text = self._post_process(raw_llm_output)
-        logger.debug(f"LLM '{self.model_name}' - Post-processed translation: {translated_text}")
+        logger.debug(
+            f"LLM '{self.model_name}' - Post-processed translation: {translated_text}"
+        )
 
         return translated_text
