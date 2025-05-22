@@ -60,15 +60,25 @@ class PromptStyle(PyEnum):
 
     @classmethod
     def from_code(cls, code: str) -> 'PromptStyle':
-        """Ruft ein Enum-Mitglied anhand seines Codes (value) ab (Groß-/Kleinschreibung wird ignoriert)."""
+        """
+        Returns the PromptStyle enum member corresponding to the given code."
+        Args:
+            code (str): The code representing the prompt style.
+        Returns:
+            PromptStyle: The corresponding PromptStyle enum member.
+        Raises:
+            ValueError: If the code does not match any PromptStyle member.
+        """
         code_lower = code.lower()
         for member in cls:
             if member.value.lower() == code_lower:
                 return member
         valid_codes = [m.value for m in cls]
-        raise ValueError(f"Ungültiger Prompt-Stil-Code: '{code}'. Verfügbare Codes: {valid_codes}")
+        raise ValueError(f" Unallowed prompt style code '{code}'. Allowed codes are: {valid_codes}")
 
     @classmethod
     def get_available_codes(cls) -> List[str]:
-        """Gibt eine Liste aller verfügbaren Prompt-Stil-Codes zurück."""
+        """
+        Returns a list of all available prompt style codes.
+        """
         return [member.value for member in cls]

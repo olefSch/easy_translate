@@ -16,7 +16,7 @@ class HuggingFaceTranslator(TranslatorBase):
     def __init__(
         self, 
         target_lang: str,
-        source_lang: str,
+        source_lang: Optional[str] = None,
         device: Optional[Union[str, torch.device]] = "cuda" if torch.cuda.is_available() else "cpu",
         max_lenght: Optional[int] = 512,
         num_beams: Optional[int] = 4,
@@ -24,12 +24,21 @@ class HuggingFaceTranslator(TranslatorBase):
         model_kwargs: Optional[dict[str, Any]] = None,
     ):
         """
-        Initialize the Hugging Face translator with optional source and required target languages.
+        Initializes the HuggingFaceTranslator with target and optional source languages,
+        device, maximum length, number of beams, and additional arguments for the tokenizer and model.
 
         Args:
-            target_lang (str): The target language code (e.g., 'fr' for French).
-            source_lang (Optional[str], optional): The source language code (e.g., 'en' for English). 
-                                                   Defaults to None (implying auto-detection).
+            target_lang (str): The target language code for translation (e.g., 'fr' for French).
+            source_lang (Optional[str]): The source language code for translation (e.g., 'en' for English).
+                Defaults to None, implying auto-detection will be attempted.
+            device (Optional[Union[str, torch.device]]): The device to use for the model.
+                Defaults to "cuda" if available, otherwise "cpu".
+            max_length (Optional[int]): The maximum length of the generated text.
+                Defaults to 512.
+            num_beams (Optional[int]): The number of beams for beam search.
+                Defaults to 4.
+            tokenizer_kwargs (Optional[dict[str, Any]]): Additional arguments for the tokenizer.
+            model_kwargs (Optional[dict[str, Any]]): Additional arguments for the model.
         """
         super().__init__(target_lang, source_lang)
 
@@ -49,12 +58,10 @@ class HuggingFaceTranslator(TranslatorBase):
         num_beams: Optional[int]
     ):
         """
-        Validate the generation parameters.
-
+        Validates the generation parameters.
         Args:
             max_length (Optional[int]): The maximum length of the generated text.
             num_beams (Optional[int]): The number of beams for beam search.
-
         Raises:
             ValueError: If max_length or num_beams is not a positive integer.
         """

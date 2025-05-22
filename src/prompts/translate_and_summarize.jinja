@@ -1,0 +1,14 @@
+Process the text from {{ source_language }} to {{ target_language }}.
+
+Original text to process: {{ text_to_translate }}
+
+Output Requirements:
+1.  First, output the summary of the original text in {{ source_language }}. Prefix it with "Summary ({{ source_language }}):".
+2.  Then, on a new line, output ONLY the translated summary in {{ target_language }}. Prefix it with "Translated Summary ({{ target_language }}):".
+3.  Do NOT include any other extra explanations or conversational phrases.
+4.  Ensure the summary is concise and captures the main points of the original text.
+5.  Ensure the translation of the summary is accurate, grammatically correct, and flows naturally.
+6.  Use the same formatting (where appropriate for a summary and its translation) as the original text, including line breaks and punctuation.
+7.  If the text contains any specific terms or jargon, ensure they are handled appropriately in both the summary and the translation for the target audience.
+
+Return following format: string
