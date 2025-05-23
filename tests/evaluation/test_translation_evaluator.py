@@ -15,12 +15,6 @@ class DummyTranslator(BaseTranslator):
         return text
 
 
-@pytest.fixture
-def evaluator() -> TranslationEvaluator:
-    # Provide a fresh evaluator instance for each test
-    return TranslationEvaluator()
-
-
 def test_scores_and_report(tmp_path: Path, evaluator: TranslationEvaluator):
     # Register dummy translator and provide matching input/reference
     inputs = ["hello world", "goodbye"]

@@ -30,4 +30,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: uv run pytest -v --durations=0
+      - run: uv run pytest tests -v --durations=0
