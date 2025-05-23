@@ -14,6 +14,7 @@ class DummyTranslator(BaseTranslator):
     def translate(self, text: str) -> str:
         return text
 
+
 def test_scores_and_report(tmp_path: Path, evaluator: TranslationEvaluator):
     # Register dummy translator and provide matching input/reference
     inputs = ["hello world", "goodbye"]

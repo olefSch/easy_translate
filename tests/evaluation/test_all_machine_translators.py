@@ -18,7 +18,7 @@ TRANSLATORS = [
     (
         MBartTranslator,
         {"source_lang": "en_XX", "target_lang": "de_DE", "device": "cpu"},
-    ), 
+    ),
 ]
 
 # NLLB Translator is not included in the test as it requires a specific environment setup
