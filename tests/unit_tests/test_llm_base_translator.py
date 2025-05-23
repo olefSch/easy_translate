@@ -17,7 +17,7 @@ def test_base_init(patched_llm_translator_class):
 
     assert translator.model_name == "model_a"
     assert translator.target_lang == "en"
-    assert translator.source_lang == None
+    assert translator.source_lang is None
     assert translator.prompt_style == PromptStyle.DEFAULT
 
 
