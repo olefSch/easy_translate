@@ -50,7 +50,7 @@ available_language_codes = [
     "ur",  # Urdu
     "vi",  # Vietnamese
     "xh",  # Xhosa
-    "zh-cn",# Chinese (Simplified)
+    "zh-cn",  # Chinese (Simplified)
 ]
 
 language_code_to_name_map = {
@@ -160,5 +160,5 @@ generic_to_mbart_code_map = {
     "ur": "ur_PK",
     "vi": "vi_VN",
     "xh": "xh_ZA",
-    "zh-cn": "zh_CN", 
+    "zh-cn": "zh_CN",
 }

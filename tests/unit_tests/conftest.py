@@ -7,6 +7,7 @@ from transformers import PreTrainedTokenizer, PreTrainedModel
 from src.translator_base import TranslatorBase
 from src.llm_translator_base import LLMTranslator
 from src.huggingface_translator_base import HuggingFaceTranslator
+from src.huggingface_models import MBARTTranslator
 
 
 # --- PromptStyle Enum
@@ -127,3 +128,12 @@ def patched_llm_translator_class():
     Provides the LLMTranslator class with _init_tokenizer, _init_model
     """
     return ConcreteLLMTranslator
+
+
+# --- MBartTranslator Class
+@pytest.fixture
+def get_mbart():
+    """
+    Provides the MBartTranslator class with _init_tokenizer, _init_model
+    """
+    return MBARTTranslator

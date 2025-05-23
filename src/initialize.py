@@ -1,4 +1,4 @@
-import logging 
+import logging
 from typing import Any
 
 from .translator_base import TranslatorBase
@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 TRANSLATOR_REGISTRY: dict[str, type[TranslatorBase]] = {
     "mbart": MBARTTranslator,
 }
+
 
 def initialize_translator(
     translator_name: str,
@@ -27,7 +28,9 @@ def initialize_translator(
         TranslatorBase: An instance of the specified translator.
     """
     if translator_name not in TRANSLATOR_REGISTRY:
-        raise ValueError(f"Unknown translator name: {translator_name}. Available: {list(TRANSLATOR_REGISTRY.keys())}")
+        raise ValueError(
+            f"Unknown translator name: {translator_name}. Available: {list(TRANSLATOR_REGISTRY.keys())}"
+        )
 
     translator_class = TRANSLATOR_REGISTRY[translator_name]
 

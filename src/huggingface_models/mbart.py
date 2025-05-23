@@ -10,6 +10,7 @@ from ..config import generic_to_mbart_code_map
 
 logger = logging.getLogger(__name__)
 
+
 class MBARTTranslator(HuggingFaceTranslator):
     """
     MBART model for translation.
@@ -54,12 +55,10 @@ class MBARTTranslator(HuggingFaceTranslator):
         tokenizer = MBart50Tokenizer.from_pretrained(
             self.MODEL_NAME, **tokenizer_kwargs
         )
-        
+
         if self.source_lang is not None:
             tokenizer.src_lang = self._convert_lang_code(self.source_lang)
-            logger.info(
-                f"Setting source language to: {tokenizer.src_lang}"
-            )
+            logger.info(f"Setting source language to: {tokenizer.src_lang}")
 
         return tokenizer
 
@@ -92,10 +91,10 @@ class MBARTTranslator(HuggingFaceTranslator):
         TranslatorBase._validate_basic_text_to_translate(text)
 
         if self.source_lang is None:
-            self.tokenizer.src_lang = self._convert_lang_code(self.detect_language(text))
-            logger.info(
-                f"Detected source language: {self.tokenizer.src_lang}"
+            self.tokenizer.src_lang = self._convert_lang_code(
+                self.detect_language(text)
             )
+            logger.info(f"Detected source language: {self.tokenizer.src_lang}")
 
         inputs = self.tokenizer(
             text,
@@ -106,7 +105,9 @@ class MBARTTranslator(HuggingFaceTranslator):
         ).to(self.device)
         logger.debug(f"Tokenized inputs: {inputs}")
 
-        forced_bos_token_id = self.tokenizer.lang_code_to_id.get(self._convert_lang_code(self.target_lang))
+        forced_bos_token_id = self.tokenizer.lang_code_to_id.get(
+            self._convert_lang_code(self.target_lang)
+        )
         logger.info(
             f"Using forced_bos_token_id: {forced_bos_token_id} for target language: {self.target_lang}"
         )
@@ -128,4 +129,3 @@ class MBARTTranslator(HuggingFaceTranslator):
         logger.debug(f"Output: {output}")
 
         return output
-     
