@@ -21,7 +21,7 @@ class HuggingFaceTranslator(TranslatorBase):
         device: Optional[Union[str, torch.device]] = "cuda"
         if torch.cuda.is_available()
         else "cpu",
-        max_lenght: Optional[int] = 512,
+        max_length: Optional[int] = 512,
         num_beams: Optional[int] = 4,
         tokenizer_kwargs: Optional[dict[str, Any]] = None,
         model_kwargs: Optional[dict[str, Any]] = None,
@@ -45,10 +45,10 @@ class HuggingFaceTranslator(TranslatorBase):
         """
         super().__init__(target_lang, source_lang)
 
-        self._validate_generation_parameters(max_lenght, num_beams)
+        self._validate_generation_parameters(max_length, num_beams)
 
         self.device = device
-        self.max_length = max_lenght
+        self.max_length = max_length
         self.num_beams = num_beams
 
         self.tokenizer: PreTrainedTokenizer = self._init_tokenizer(
