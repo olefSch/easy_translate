@@ -56,6 +56,10 @@ class HuggingFaceTranslator(TranslatorBase):
         )
         self.model: PreTrainedModel = self._init_model(model_kwargs)
 
+        logger.info(
+            f"Initialized {self.__class__.__name__} with target language '{target_lang}'"
+        )
+
     def _validate_generation_parameters(
         self, max_length: Optional[int], num_beams: Optional[int]
     ):
