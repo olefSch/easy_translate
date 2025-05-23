@@ -36,8 +36,6 @@ class LLMTranslator(TranslatorBase):
             target_lang (str): The target language code for translation (e.g., 'fr' for French).
             source_lang (Optional[str]): The source language code for translation (e.g., 'en' for English).
                 Defaults to None, implying auto-detection will be attempted.
-            prompt_type (str): The type of prompt to use for translation.
-                Defaults to "default", which uses the default prompt template.
         """
         super().__init__(target_lang, source_lang)
 
@@ -113,14 +111,16 @@ class LLMTranslator(TranslatorBase):
         else:
             source_lang = self.source_lang
 
-        long_source_lang = self.LANGUAGE_MAPPER.get(source_lang, source_lang)
-        long_target_lang = self.LANGUAGE_MAPPER.get(
-            self.target_lang, self.target_lang
+        long_source_lang = self.LANGUAGE_MAPPER.get(source_lang)
+        long_target_lang = self.LANGUAGE_MAPPER.get(self.target_lang)
+
+        logger.info(
+            f"Detected source language: {long_source_lang}, target language: {long_target_lang}"
         )
 
         return self.prompt.render(
-            source_lang=long_source_lang,
-            target_lang=long_target_lang,
+            source_language=long_source_lang,
+            target_language=long_target_lang,
             text_to_translate=text_to_translate,
         )
 

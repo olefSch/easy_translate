@@ -1,9 +1,11 @@
+from typing import Iterable
 import pytest
 
 from unittest.mock import MagicMock
 from transformers import PreTrainedTokenizer, PreTrainedModel
 
 from src.translator_base import TranslatorBase
+from src.llm_translator_base import LLMTranslator
 from src.huggingface_translator_base import HuggingFaceTranslator
 
 
@@ -93,3 +95,35 @@ def patched_huggingface_translator_class(
         return_value=mock_model_instance,
     )
     return ConcreteHuggingFaceTranslator
+
+
+# --- LLM Translator Class
+class ConcreteLLMTranslator(LLMTranslator):
+    """
+    A concrete implementation of LLMTranslator for testing purposes.
+    """
+
+    AVAILABLE_MODELS = ["model_a", "model_b"]
+    LANGUAGE_CODES = ["en", "de", "custom_test_lang"]
+
+    def _init_model(self, model_name: str):
+        """Dummy method to initialize the model."""
+        return MagicMock()
+
+    def _get_credentials(self):
+        """Dummy method to get credentials."""
+        return {"api_key": "dummy_key"}
+
+    def _generate(self, input: str) -> Iterable:
+        return ["my mocked translation"]
+
+    def _post_process(self, raw_response: Iterable) -> str:
+        return next(iter(raw_response))
+
+
+@pytest.fixture
+def patched_llm_translator_class():
+    """
+    Provides the LLMTranslator class with _init_tokenizer, _init_model
+    """
+    return ConcreteLLMTranslator
