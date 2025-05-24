@@ -47,5 +47,5 @@ def test_init_validation_errors(
 ):
     with pytest.raises(ValueError, match=expected_error_msg_part):
         patched_huggingface_translator_class(
-            target_lang="fr", max_lenght=max_l_param, num_beams=num_b_param
+            target_lang="fr", max_length=max_l_param, num_beams=num_b_param
         )
