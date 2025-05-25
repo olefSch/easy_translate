@@ -33,13 +33,15 @@ nav:
     - Overview: package_docs/overview.md
     - Non-LLM Translation: package_docs/non_llm_translation.md
     - LLM Translation: package_docs/llm_translation.md
+    - Language Support: package_docs/languages_support.md
   - Evaluation:
     - Overview: evaluation/overview.md
     - Metrics: evaluation/metrics.md
-    #- Evaluator: evaluation/evaluator.md
-    #- Models: evaluation/model.md
-    #- Config: evaluation/config.md
-    #- Usage: evaluation/usage.md
+    - Own Usage:
+      - Usage: evaluation/usage.md
+      - Config: evaluation/config.md
+      - Evaluator: evaluation/evaluator.md
+      - Models: evaluation/model.md
 
 plugins:
   - search

@@ -11,7 +11,7 @@
 
 ## Summary
 
-coming ...
+Translation library that provides an easy-to-use interface for translating text using both local transformer models and large language models (LLMs) from popular providers. It is designed to simplify the translation process while ensuring high-quality results through careful model evaluation also shown in the documentation.
 
 ## 🚀 Features
 
@@ -28,24 +28,6 @@ Install the package from pypi:
 ```bash
 pip install easy-nlp-translate
 ```
-
-### Initialization - Local Translation
-
-coming ...
-
-### Initilization - LLM based Translation
-
-`OPEN AI:`
-
-coming ...
-
-`Gemini:`
-
-coming ...
-
-`Antrophic:`
-
-coming
 
 ## 👥 Contributions
 

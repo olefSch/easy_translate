@@ -18,19 +18,9 @@ Install the package from pypi:
 pip install easy-nlp-translate
 ```
 
-## 👥 Contributions
+## Example Project where easy-nlp-transalte gets used
 
-<table border="0">
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="33.33%"><a href="https://github.com/philipp-mey"><img src="https://avatars.githubusercontent.com/u/59752830?v=4" width="100px;" alt="Philipp Meyer"/><br /><sub><b>Philipp Meyer</b></sub></a></td>
-      <td align="center" valign="top" width="33.33%"><a href="https://github.com/kevs22"><img src="https://avatars.githubusercontent.com/u/113542278?v=4" width="100px;" alt="Kevin Schäfer"/><br /><sub><b>Kevin Schäfer</b></sub></a></td>
-      <td align="center" valign="top" width="33.33%"><a href="https://github.com/olefSch"><img src="https://avatars.githubusercontent.com/u/117641051?v=4" width="100px;" alt="Ole Schildt"/><br /><sub><b>Ole Schildt</b></sub></a></td>
-    </tr>
-
-  </tbody>
-</table>
-
+This [Repo](https://github.com/philipp-mey/nlp_frontend) shows an example project where `easy-nlp-translate` is used to translate text in a web application. It demonstrates how to integrate the library into a larger project and utilize its features effectively. The project includes a streamlit frontend which enables users to create subtitles for their videos. Those subtitles get translated using `easy-nlp-translate` and then saved to a database.
 ## 🧾 License
 
 This project is licensed under the **MIT License**. See the [LICENSE](https://github.com/olefSch/easy_translate/blob/main/LICENSE) file for details.
