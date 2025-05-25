@@ -1,5 +1,6 @@
 site_name: Easy Translate
 site_url: https://easy-translate.example.com # will change later
+repo_url: https://github.com/olefSch/easy_translate
 theme:
   name: material
   logo: assets/enlpt_logo.png
@@ -23,7 +24,6 @@ theme:
   features:
     - navigation.tabs
     - navigation.top
-    - toc.integrate
     - search.highlight
     - content.code.annotate
 
@@ -47,12 +47,13 @@ plugins:
       handlers:
         python:
           options:
+            show_inherited_members: true
+            inherited_members: true
+            show_bases: false
+            show_source: true
             show_root_heading: true
             show_root_full_path: false
             show_source: false
-            preload_modules:
-            - src.translator_base
-            - src.huggingface_translator_base
 
 # emoji support
 markdown_extensions:
@@ -60,3 +61,6 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences 
+  - pymdownx.details    
+  - admonition  
