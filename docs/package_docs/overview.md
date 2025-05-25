@@ -17,7 +17,7 @@ The following translators are available, each identified by a unique ID:
 
 To use a translator, you first need to initialize it using its `translator_name` ID.
 
-```python title="1. Initialize the Translator"
+```python title="Initialize the Translator"
 from easy_nlp_translate import initialize_translator
 
 # Initialize the translator using its ID
