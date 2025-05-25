@@ -28,8 +28,8 @@ class MBARTTranslator(HuggingFaceTranslator):
         else "cpu",
         max_length: Optional[int] = 512,
         num_beams: Optional[int] = 4,
-        tokenizer_kwargs: Optional[Dict[str, Any]] = None, # Changed to Dict
-        model_kwargs: Optional[Dict[str, Any]] = None,     # Changed to Dict
+        tokenizer_kwargs: Optional[Dict[str, Any]] = None,  # Changed to Dict
+        model_kwargs: Optional[Dict[str, Any]] = None,  # Changed to Dict
     ):
         """
         Initializes the MBARTTranslator.
@@ -62,7 +62,7 @@ class MBARTTranslator(HuggingFaceTranslator):
             num_beams=num_beams,
             tokenizer_kwargs=tokenizer_kwargs,
             model_kwargs=model_kwargs,
-        )    
+        )
 
     def _convert_lang_code(self, lang_code: str) -> str:
         """
