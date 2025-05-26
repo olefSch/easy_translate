@@ -10,7 +10,7 @@
 ![Antrophic](https://img.shields.io/badge/Claude%20Sonnet-blueviolet?style=for-the-badge)
 
 ## Docs
-Here is the link to the [documentation](https://github.com/olefSch/easy_translate).
+Here is the link to the [documentation](https://easy-nlp-translate.de).
 
 ## Summary
 
