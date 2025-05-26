@@ -1,6 +1,6 @@
 import pytest
 from typing import Iterable
-from src.prompt_config import PromptStyle
+from easy_nlp_translate.prompt_config import PromptStyle
 
 
 # --- init testing

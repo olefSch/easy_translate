@@ -1,5 +1,5 @@
 import pytest
-from src.initialize import initialize_translator
+from easy_nlp_translate.initialize import initialize_translator
 
 
 # --- mbart translator

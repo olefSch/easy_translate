@@ -1,3 +1,3 @@
 # Models for Non-LLM translations
 
-::: src.huggingface_models.mbart.MBARTTranslator
+::: easy_nlp_translate.huggingface_models.mbart.MBARTTranslator
