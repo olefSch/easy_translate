@@ -42,7 +42,7 @@ class LLMTranslator(TranslatorBase):
         self._validate_model_name(model_name)
         self.model_name = model_name
         self.credentials = self._get_credentials()
-        self.model = self._init_model(model_name)
+        self.model = self._init_model()
 
         try:
             self.prompt_style: PromptStyle = PromptStyle.from_code(prompt_type)
@@ -135,7 +135,7 @@ class LLMTranslator(TranslatorBase):
         )
 
     @abstractmethod
-    def _init_model(self, model_name: str):
+    def _init_model(self):
         """
         Initializes the model with the given name.
         This method should be implemented in subclasses to provide the necessary model initialization.

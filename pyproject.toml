@@ -7,6 +7,7 @@ requires-python = ">=3.11, <=3.12"
 dependencies = [
     "datasets>=3.6.0",
     "evaluate>=0.4.3",
+    "google-genai>=1.16.1",
     "huggingface>=0.0.1",
     "langdetect>=1.0.9",
     "matplotlib>=3.10.3",
@@ -14,6 +15,7 @@ dependencies = [
     "ollama>=0.4.8",
     "pandas>=2.2.3",
     "protobuf>=6.31.0",
+    "python-dotenv>=1.1.0",
     "pyyaml>=6.0.2",
     "seaborn>=0.13.2",
     "sentencepiece>=0.2.0",
@@ -32,6 +34,7 @@ dev = [
     "mkdocs-material>=9.6.14",
     "mkdocstrings-python>=1.16.11",
     "mkdocstrings>=0.29.1",
+    "easy-nlp-translate",
 ]
 [tool.pytest.ini_options]
 pythonpath = "src"
@@ -47,3 +50,6 @@ name = "testpypi"
 url = "https://test.pypi.org/simple/"
 publish-url = "https://test.pypi.org/legacy/"
 explicit = true
+
+[tool.uv.sources]
+easy-nlp-translate = { workspace = true }

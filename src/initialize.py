@@ -3,11 +3,13 @@ from typing import Any
 
 from .translator_base import TranslatorBase
 from .huggingface_models import MBARTTranslator
+from .llm_provider import GeminiTranslator
 
 logger = logging.getLogger(__name__)
 
 TRANSLATOR_REGISTRY: dict[str, type[TranslatorBase]] = {
     "mbart": MBARTTranslator,
+    "gemini": GeminiTranslator,
 }
 
 
