@@ -1,3 +1,3 @@
 from .gemini import GeminiTranslator
 
-___all__ = ["GeminiTranslator"]
+__all__ = ["GeminiTranslator"]
