@@ -107,7 +107,7 @@ class ConcreteLLMTranslator(LLMTranslator):
     AVAILABLE_MODELS = ["model_a", "model_b"]
     LANGUAGE_CODES = ["en", "de", "custom_test_lang"]
 
-    def _init_model(self, model_name: str):
+    def _init_model(self):
         """Dummy method to initialize the model."""
         return MagicMock()
 
@@ -137,3 +137,4 @@ def get_mbart():
     Provides the MBartTranslator class with _init_tokenizer, _init_model
     """
     return MBARTTranslator
+
