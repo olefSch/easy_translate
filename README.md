@@ -9,6 +9,9 @@
 ![Gemini](https://img.shields.io/badge/Google-Gemini-blue?style=for-the-badge&logo=google&logoColor=white)
 ![Antrophic](https://img.shields.io/badge/Claude%20Sonnet-blueviolet?style=for-the-badge)
 
+## Docs
+Here is the link to the [documentation](https://github.com/olefSch/easy_translate).
+
 ## Summary
 
 Translation library that provides an easy-to-use interface for translating text using both local transformer models and large language models (LLMs) from popular providers. It is designed to simplify the translation process while ensuring high-quality results through careful model evaluation also shown in the documentation.
