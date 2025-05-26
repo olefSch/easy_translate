@@ -125,10 +125,3 @@ Equivalent mappings were defined for all language pairs during evaluation in the
 
 ---
 
-## Next Steps
-
-- [Metrics](metrics.md) - Details on BLEU, METEOR, and how translation quality is measured
-- [Evaluator](evaluator.md) - Core evaluation logic: how models are registered, run, and scored
-- [Models](model.md) - Overview of model implementations, including MBart, Marian, and LLMs
-- [Config](config.md) - Centralized setup for model selection, dataset use, and language mappings
-- [Usage](usage.md) - How to run evaluations and generate reports step by step

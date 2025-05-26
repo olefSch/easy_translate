@@ -1,6 +1,6 @@
 [project]
 name = "easy-nlp-translate"
-version = "0.1.0"
+version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11, <=3.12"
@@ -19,8 +19,6 @@ dependencies = [
     "sentencepiece>=0.2.0",
     "torch>=2.7.0",
     "transformers>=4.51.3",
-    "mkdocs==1.6.1",
-    "mkdocs-material==9.6.14",
 ]
 
 [dependency-groups]
@@ -30,6 +28,10 @@ dev = [
     "ipykernel>=6.29.5",
     "pytest-mock>=3.14.0",
     "sacremoses>=0.1.1",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.14",
+    "mkdocstrings-python>=1.16.11",
+    "mkdocstrings>=0.29.1",
 ]
 [tool.pytest.ini_options]
 pythonpath = "src"
