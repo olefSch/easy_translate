@@ -4,10 +4,12 @@ import pytest
 from unittest.mock import MagicMock
 from transformers import PreTrainedTokenizer, PreTrainedModel
 
-from src.translator_base import TranslatorBase
-from src.llm_translator_base import LLMTranslator
-from src.huggingface_translator_base import HuggingFaceTranslator
-from src.huggingface_models import MBARTTranslator
+from easy_nlp_translate.translator_base import TranslatorBase
+from easy_nlp_translate.llm_translator_base import LLMTranslator
+from easy_nlp_translate.huggingface_translator_base import (
+    HuggingFaceTranslator,
+)
+from easy_nlp_translate.huggingface_models import MBARTTranslator
 
 
 # --- PromptStyle Enum
@@ -137,4 +139,3 @@ def get_mbart():
     Provides the MBartTranslator class with _init_tokenizer, _init_model
     """
     return MBARTTranslator
-

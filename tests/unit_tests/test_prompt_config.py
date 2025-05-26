@@ -1,6 +1,6 @@
 import pytest
 
-from src.prompt_config import PromptStyle
+from easy_nlp_translate.prompt_config import PromptStyle
 
 
 def test_from_code_valid_codes():

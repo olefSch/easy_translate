@@ -1,6 +1,6 @@
 import pytest
 from langdetect import DetectorFactory
-from src.exceptions import DetectionError
+from easy_nlp_translate.exceptions import DetectionError
 
 DetectorFactory.seed = 0
 

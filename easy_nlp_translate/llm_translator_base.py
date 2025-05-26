@@ -14,13 +14,13 @@ logger = logging.getLogger(__name__)
 
 
 class LLMTranslator(TranslatorBase):
-    AVAILABLE_MODELS: list[str] = NotImplemented
-    TEMPLATES_DIR: Path = SHARED_LLM_PROMPT_TEMPLATES_DIR
-    LANGUAGE_MAPPER: dict[str, str] = language_code_to_name_map
-
     """
     A base class for LLM-based translators, inheriting from TranslatorBase.
     """
+
+    AVAILABLE_MODELS: list[str] = NotImplemented
+    TEMPLATES_DIR: Path = SHARED_LLM_PROMPT_TEMPLATES_DIR
+    LANGUAGE_MAPPER: dict[str, str] = language_code_to_name_map
 
     def __init__(
         self,
@@ -31,6 +31,7 @@ class LLMTranslator(TranslatorBase):
     ):
         """
         Initializes the LLMTranslator with a model name, target language, optional source language, and prompt type.
+
         Args:
             model_name (str): The name of the LLM model to use for translation.
             target_lang (str): The target language code for translation (e.g., 'fr' for French).
@@ -195,8 +196,6 @@ class LLMTranslator(TranslatorBase):
         Raises:
             ValueError: If input text validation fails, language detection fails
                 when required, or prompt rendering fails.
-            NotImplementedError: If any of the abstract methods are not implemented.
-            Any exceptions from underlying LLM API calls.
         """
         LLMTranslator._validate_basic_text_to_translate(text)
 

@@ -1,4 +1,4 @@
-import logging 
+import logging
 import os
 from typing import Optional, Iterable
 from google import genai
@@ -10,6 +10,7 @@ from ..config import available_models_gemini
 logger = logging.getLogger(__name__)
 
 load_dotenv()
+
 
 class GeminiTranslator(LLMTranslator):
     AVAILABLE_MODELS: list[str] = available_models_gemini
@@ -27,11 +28,13 @@ class GeminiTranslator(LLMTranslator):
     ):
         """
         Initializes the LLMTranslator with a model name, target language, optional source language, and prompt type.
+
         Args:
             model_name (str): The name of the LLM model to use for translation.
             target_lang (str): The target language code for translation (e.g., 'fr' for French).
             source_lang (Optional[str]): The source language code for translation (e.g., 'en' for English).
                 Defaults to None, implying auto-detection will be attempted.
+            prompt_type (str): The type of prompt to use for the translation. Defaults to "default".
         """
         super().__init__(model_name, target_lang, source_lang, prompt_type)
 
@@ -79,4 +82,3 @@ class GeminiTranslator(LLMTranslator):
             str: The translated text extracted from the raw response.
         """
         return raw_response.text.strip()
-       

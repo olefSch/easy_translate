@@ -1,5 +1,6 @@
 import pytest
-from src import initialize_translator
+from easy_nlp_translate import initialize_translator
+
 
 # --- detector TESTS ---
 def test_detect_langauge():
@@ -63,8 +64,10 @@ def test_mbart_translator_with_custom_input_values():
 
     assert translated_text == "Dies ist ein Hund."
 
+
 # --- LLM TESTS ---
 # --- Gemini TESTS ---
+
 
 def test_gemini_translator_with_default_model():
     """
@@ -118,6 +121,7 @@ def test_gemini_translator_with_custom_prompt():
 
     assert isinstance(translated_text, str)
     assert translated_text != ""
+
 
 def test_gemini_translator_wrong_model_name():
     """
