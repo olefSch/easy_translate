@@ -29,6 +29,7 @@ class OllamaTranslator(LLMTranslator):
         target_lang: str,
         source_lang: Optional[str] = None,
         prompt_type: str = "default",
+        costum_prompt: Optional[str] = None,
         temperature: float = 0.7,
         max_tokens: int = 1000,
     ):
@@ -40,6 +41,7 @@ class OllamaTranslator(LLMTranslator):
             target_lang (str): The target language code (e.g., 'fr' for French).
             source_lang (Optional[str]): The source language code (e.g., 'en' for English).
             prompt_type (str): The type of prompt to use. Defaults to "default".
+            costum_prompt (Optional[str]): A custom prompt to use if the prompt type is "custom". Defaults to None.
             temperature (float): The temperature for model responses. Defaults to 0.7.
             max_tokens (int): Max tokens for the response (maps to 'num_predict'). Defaults to 1000.
         """
@@ -48,6 +50,7 @@ class OllamaTranslator(LLMTranslator):
             target_lang,
             source_lang,
             prompt_type,
+            costum_prompt,
             temperature,
             max_tokens,
         )

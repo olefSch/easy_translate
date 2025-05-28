@@ -46,6 +46,7 @@ def expected_codes():
         "formal_translate_and_summarize",
         "romantic",
         "poetic",
+        "custom",
     ]
 
 

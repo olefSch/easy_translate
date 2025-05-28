@@ -28,6 +28,7 @@ class LLMTranslator(TranslatorBase):
         target_lang: str,
         source_lang: Optional[str] = None,
         prompt_type: str = "default",
+        costum_prompt: Optional[str] = None,
         temperature: float = 0.7,
         max_tokens: int = 1000,
     ):
@@ -40,6 +41,7 @@ class LLMTranslator(TranslatorBase):
             source_lang (Optional[str]): The source language code for translation (e.g., 'en' for English).
                 Defaults to None, implying auto-detection will be attempted.
             prompt_type (str): The type of prompt to use for the translation. Defaults to "default".
+            costum_prompt (str): A custom prompt to use if the prompt type is "custom". Defaults to a simple translation prompt.
             temperature (float): The temperature for the model's responses. Defaults to 0.7.
             max_tokens (int): The maximum number of tokens to generate in the response. Defaults to 1000.
         """
@@ -58,6 +60,13 @@ class LLMTranslator(TranslatorBase):
             raise ValueError(
                 f"Prompt type '{prompt_type}' is not available. Avaliable types are: {PromptStyle.get_available_codes()}"
             )
+
+        if self.prompt_style == PromptStyle.CUSTOM and not costum_prompt:
+            raise ValueError(
+                "Custom prompt is required when using the 'custom' prompt style."
+            )
+        else:
+            self.costum_prompt = costum_prompt
 
         self.prompt: Template = self._init_prompt()
         self.temperature = temperature
@@ -150,11 +159,19 @@ class LLMTranslator(TranslatorBase):
             f"Detected source language: {long_source_lang}, target language: {long_target_lang}"
         )
 
-        return self.prompt.render(
-            source_language=long_source_lang,
-            target_language=long_target_lang,
-            text_to_translate=text_to_translate,
-        )
+        if self.prompt_style == PromptStyle.CUSTOM:
+            return self.prompt.render(
+                source_language=long_source_lang,
+                target_language=long_target_lang,
+                text_to_translate=text_to_translate,
+                custom_prompt=self.costum_prompt,
+            )
+        else:
+            return self.prompt.render(
+                source_language=long_source_lang,
+                target_language=long_target_lang,
+                text_to_translate=text_to_translate,
+            )
 
     @abstractmethod
     def _get_credentials(self):
