@@ -49,7 +49,6 @@ plugins:
       handlers:
         python:
           options:
-            show_inherited_members: true
             inherited_members: true
             show_bases: false
             show_source: true
