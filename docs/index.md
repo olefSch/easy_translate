@@ -6,7 +6,6 @@ This library provides an easy-to-use interface for translating text using both l
 
 - Translation with a local transformer model selected based on our evaltuaion
 - LLM Translation using common provider with a costum prompt or based on our prompty lirary
-- Access to own distilled model
 
 ## 📦 Installation & Instructions
 
