@@ -71,7 +71,7 @@ These are the available llm translators:
 |------------|------------------------|--------|-------------------|
 | Gemini     | `gemini`               | `gemini-2.5-flash-preview-05-20`, `gemini-2.5-pro-preview-05-06`, `gemini-2.0-flash`, `gemini-2.0-flash-lite`, `gemini-1.5-flash`, `gemini-1.5-flash-8b`,`gemini-1.5-pro`| `GEMINI_API_KEY` |
 | GPT        | `gpt`                  | `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, `gpt-4.5-preview`, `gpt-4o`, `gpt-4o-mini` | `OPENAI_API_KEY`|
-| Claude     | `claude`               | coming soon... | `ANTHROPIC_API_KEY`|
+| Claude     | `claude`               | `claude-opus-4-0`, `claude-sonnet-4-0`, `claude-3-7-sonnet-latest`, `claude-3-5-sonnet-latest`, `claude-3-5-haiku-latest`, `claude-3-opus-latest` | `ANTHROPIC_API_KEY`|
 | Ollama     | `ollama`               | `llama3`, `llama2`, `mistral`, `mixtral` coming soon... | `OLLAMA_API_KEY`|
 
 ## Prompt Types for LLM Translators

@@ -27,6 +27,7 @@ class GeminiTranslator(LLMTranslator):
         source_lang: Optional[str] = None,
         prompt_type: str = "default",
         temperature: float = 0.7,
+        max_tokens: int = 1000,
     ):
         """
         Initializes the LLMTranslator with a model name, target language, optional source language, and prompt type.
@@ -38,9 +39,15 @@ class GeminiTranslator(LLMTranslator):
                 Defaults to None, implying auto-detection will be attempted.
             prompt_type (str): The type of prompt to use for the translation. Defaults to "default".
             temperature (float): The temperature for the model's responses. Defaults to 0.7.
+            max_tokens (int): The maximum number of tokens to generate in the response. Defaults to 1000.
         """
         super().__init__(
-            model_name, target_lang, source_lang, prompt_type, temperature
+            model_name,
+            target_lang,
+            source_lang,
+            prompt_type,
+            temperature,
+            max_tokens,
         )
 
     def _get_credentials(self) -> str:
@@ -74,7 +81,9 @@ class GeminiTranslator(LLMTranslator):
         response = self.model.models.generate_content(
             model=self.model_name,
             contents=input,
-            config=types.GenerateContentConfig(temperature=self.temperature),
+            config=types.GenerateContentConfig(
+                temperature=self.temperature, max_output_tokens=self.max_tokens
+            ),
         )
         return response
 
