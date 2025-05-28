@@ -2,6 +2,7 @@ import logging
 import os
 from typing import Optional, Iterable
 from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 
 from ..llm_translator_base import LLMTranslator
@@ -25,6 +26,7 @@ class GeminiTranslator(LLMTranslator):
         target_lang: str,
         source_lang: Optional[str] = None,
         prompt_type: str = "default",
+        temperature: float = 0.7,
     ):
         """
         Initializes the LLMTranslator with a model name, target language, optional source language, and prompt type.
@@ -35,8 +37,9 @@ class GeminiTranslator(LLMTranslator):
             source_lang (Optional[str]): The source language code for translation (e.g., 'en' for English).
                 Defaults to None, implying auto-detection will be attempted.
             prompt_type (str): The type of prompt to use for the translation. Defaults to "default".
+            temperature (float): The temperature for the model's responses. Defaults to 0.7.
         """
-        super().__init__(model_name, target_lang, source_lang, prompt_type)
+        super().__init__(model_name, target_lang, source_lang, prompt_type, temperature)
 
     def _get_credentials(self) -> str:
         """
@@ -69,6 +72,9 @@ class GeminiTranslator(LLMTranslator):
         response = self.model.models.generate_content(
             model=self.model_name,
             contents=input,
+            config=types.GenerateContentConfig(
+                temperature=self.temperature
+            ),
         )
         return response
 
