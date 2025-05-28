@@ -9,9 +9,7 @@ This library provides an easy-to-use interface for translating text using both l
 
 ## 📦 Installation & Instructions
 
-### Installion
-
-Install the package from pypi:
+Install the package from pypi. It requires Python 3.11 or 3.12:
 
 ```bash
 pip install easy-nlp-translate
