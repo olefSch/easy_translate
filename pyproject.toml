@@ -45,8 +45,8 @@ dev = [
 [tool.pytest.ini_options]
 pythonpath = "easy_nlp_translate"
 
-[tool.setuptools]
-packages = ["easy_nlp_translate"]
+[tool.setuptools.packages.find]
+include = ["easy_nlp_translate*"]
 
 [[tool.uv.index]]
 name = "pypi"
