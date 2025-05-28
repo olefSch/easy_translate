@@ -1,6 +1,7 @@
 import logging
 from typing import Optional, Iterable
 import ollama
+import os
 from dotenv import load_dotenv
 
 from ..llm_translator_base import LLMTranslator
@@ -11,9 +12,11 @@ load_dotenv()
 
 
 class OllamaTranslator(LLMTranslator):
-    AVAILABLE_MODELS: list[str] = [
-        model_obj.model for model_obj in ollama.list()["models"]
-    ]
+    AVAILABLE_MODELS: list[str] = (
+        []
+        if os.environ.get("TEST_OLLAMA_LIST")
+        else [model_obj.model for model_obj in ollama.list()["models"]]
+    )
 
     """
     A class for LLM-based translations using local Ollama models,
