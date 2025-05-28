@@ -81,13 +81,19 @@ class GeminiTranslator(LLMTranslator):
         Returns:
             Iterable: An iterable containing the generated translation.
         """
-        response = self.model.models.generate_content(
-            model=self.model_name,
-            contents=input,
-            config=types.GenerateContentConfig(
-                temperature=self.temperature, max_output_tokens=self.max_tokens
-            ),
-        )
+        try:
+            response = self.model.models.generate_content(
+                model=self.model_name,
+                contents=input,
+                config=types.GenerateContentConfig(
+                    temperature=self.temperature,
+                    max_output_tokens=self.max_tokens,
+                ),
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to generate content with Gemini model '{self.model_name}': {e}"
+            )
         return response
 
     def _post_process(self, raw_response: Iterable) -> str:

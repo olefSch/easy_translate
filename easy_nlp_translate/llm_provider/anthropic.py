@@ -93,12 +93,17 @@ class ClaudeTranslator(LLMTranslator):
         Returns:
             anthropic.types.Message: The raw Message object from the Claude model.
         """
-        response = self.model.messages.create(
-            model=self.model_name,
-            temperature=self.temperature,
-            max_tokens=self.max_tokens,
-            messages=[{"role": "user", "content": input}],
-        )
+        try:
+            response = self.model.messages.create(
+                model=self.model_name,
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+                messages=[{"role": "user", "content": input}],
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to generate content with Claude model '{self.model_name}': {e}"
+            )
         return response
 
     def _post_process(self, raw_response: Iterable) -> str:

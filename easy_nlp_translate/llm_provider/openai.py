@@ -80,18 +80,24 @@ class GPTTranslator(LLMTranslator):
         Returns:
             Iterable: An iterable containing the generated translation.
         """
-        return self.model.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {
-                    "role": "system",
-                    "content": f"You are a helpful translator that translates text to {self.target_lang}.",
-                },
-                {"role": "user", "content": input},
-            ],
-            temperature=self.temperature,
-            max_tokens=self.max_tokens,
-        )
+        try:
+            response = self.model.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": f"You are a helpful translator that translates text to {self.target_lang}.",
+                    },
+                    {"role": "user", "content": input},
+                ],
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to generate content with GPT model '{self.model_name}': {e}"
+            )
+        return response
 
     def _post_process(self, raw_response: Iterable) -> str:
         """

@@ -105,11 +105,16 @@ class OllamaTranslator(LLMTranslator):
             "num_predict": self.max_tokens,
         }
 
-        response = ollama.generate(
-            model=self.model_name,
-            prompt=input,
-            options=options,
-        )
+        try:
+            response = ollama.generate(
+                model=self.model_name,
+                prompt=input,
+                options=options,
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to generate response from Ollama model '{self.model_name}': {e}"
+            )
         return response
 
     def _post_process(self, raw_response: Iterable) -> str:

@@ -1,8 +1,9 @@
 import logging
-from typing import Any
+from typing import Any, Optional, overload, Literal
 
 from .translator_base import TranslatorBase
 from .huggingface_models import MBARTTranslator
+from .llm_translator_base import LLMTranslator
 from .llm_provider import (
     GeminiTranslator,
     GPTTranslator,
@@ -19,6 +20,32 @@ TRANSLATOR_REGISTRY: dict[str, type[TranslatorBase]] = {
     "claude": ClaudeTranslator,
     "ollama": OllamaTranslator,
 }
+
+
+@overload
+def initialize_translator(
+    translator_name: Literal["mbart"],
+    target_lang: str,
+    source_lang: Optional[str] = None,
+    device: Optional[str] = None,
+    max_length: Optional[int] = 512,
+    num_beams: Optional[int] = 4,
+    tokenizer_kwargs: Optional[dict[str, Any]] = None,
+    model_kwargs: Optional[dict[str, Any]] = None,
+) -> MBARTTranslator: ...
+
+
+@overload
+def initialize_translator(
+    translator_name: Literal["gemini", "gpt", "claude", "ollama"],
+    model_name: str,
+    target_lang: str,
+    source_lang: Optional[str] = None,
+    prompt_type: str = "default",
+    costum_prompt: Optional[str] = None,
+    temperature: float = 0.7,
+    max_tokens: int = 1000,
+) -> LLMTranslator: ...
 
 
 def initialize_translator(
