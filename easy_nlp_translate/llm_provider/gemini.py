@@ -39,7 +39,9 @@ class GeminiTranslator(LLMTranslator):
             prompt_type (str): The type of prompt to use for the translation. Defaults to "default".
             temperature (float): The temperature for the model's responses. Defaults to 0.7.
         """
-        super().__init__(model_name, target_lang, source_lang, prompt_type, temperature)
+        super().__init__(
+            model_name, target_lang, source_lang, prompt_type, temperature
+        )
 
     def _get_credentials(self) -> str:
         """
@@ -72,9 +74,7 @@ class GeminiTranslator(LLMTranslator):
         response = self.model.models.generate_content(
             model=self.model_name,
             contents=input,
-            config=types.GenerateContentConfig(
-                temperature=self.temperature
-            ),
+            config=types.GenerateContentConfig(temperature=self.temperature),
         )
         return response
 

@@ -138,6 +138,7 @@ def test_gemini_translator_wrong_model_name():
 
     assert "Model 'invalid-model-name' is not available." in str(excinfo.value)
 
+
 # --- OPENAI TESTS ---
 def test_gpt_translator_with_default_model():
     """

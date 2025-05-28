@@ -17,7 +17,7 @@ Install the package from pypi:
 pip install easy-nlp-translate
 ```
 
-## Example Project where easy-nlp-transalte gets used
+## 🏗️ Example Project where easy-nlp-transalte gets used
 
 This [Repo](https://github.com/philipp-mey/nlp_frontend) shows an example project where `easy-nlp-translate` is used to translate text in a web application. It demonstrates how to integrate the library into a larger project and utilize its features effectively. The project includes a streamlit frontend which enables users to create subtitles for their videos. Those subtitles get translated using `easy-nlp-translate` and then saved to a database.
 ## 🧾 License

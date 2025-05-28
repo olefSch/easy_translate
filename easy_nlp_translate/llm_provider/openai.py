@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 
-class GPTTranslator(LLMTranslator):
 
+class GPTTranslator(LLMTranslator):
     AVAILABLE_MODELS: list[str] = available_models_openai
 
     """
@@ -38,7 +38,9 @@ class GPTTranslator(LLMTranslator):
             prompt_type (str): The type of prompt to use for the translation. Defaults to "default".
             temperature (float): The temperature for the model's responses. Defaults to 0.7.
         """
-        super().__init__(model_name, target_lang, source_lang, prompt_type, temperature)
+        super().__init__(
+            model_name, target_lang, source_lang, prompt_type, temperature
+        )
 
     def _get_credentials(self) -> str:
         """
@@ -71,11 +73,15 @@ class GPTTranslator(LLMTranslator):
         return self.model.chat.completions.create(
             model=self.model_name,
             messages=[
-                {"role": "system", "content": f"You are a helpful translator that translates text to {self.target_lang}."},
-                {"role": "user", "content": input}
+                {
+                    "role": "system",
+                    "content": f"You are a helpful translator that translates text to {self.target_lang}.",
+                },
+                {"role": "user", "content": input},
             ],
             temperature=self.temperature,
         )
+
     def _post_process(self, raw_response: Iterable) -> str:
         """
         Post-processes the raw response from the GPT model to extract the translated text.

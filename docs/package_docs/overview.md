@@ -9,9 +9,10 @@ The following translators are available, each identified by a unique ID:
 | Translator | ID (`translator_name`) | Description                                                                                                |
 |------------|------------------------|------------------------------------------------------------------------------------------------------------|
 | MBart50    | `mbart`                | A multilingual translation model supporting 50 languages. It can also run locally without external dependencies. This is also the best machine translator out of the evaluation we did.|
-| Gemini     | `gemini`               | *Coming soon...* |
-| GPT        | `gpt`                  | *Coming soon...* |
-| Claude     | `claude`               | *Coming soon...* |
+| Gemini     | `gemini`               | Gemini is a state-of-the-art translation model from Google, available in various versions. It requires an API key for access. |
+| GPT        | `gpt`                  | GPT models from OpenAI can be used for translation tasks, leveraging their advanced language understanding capabilities. Requires an API key. |
+| Claude     | `claude`               | Claude models from Anthropic are designed for complex language tasks, including translation. Requires an API key. |
+| Ollama     | `ollama`               | Ollama is a platform for running large language models locally. It supports various models for translation tasks. Requires Ollama to be installed and running. |
 
 ## Basic Usage
 
@@ -69,8 +70,13 @@ These are the available llm translators:
 | Translator | ID (`translator_name`) | Models | API_KEY env var |
 |------------|------------------------|--------|-------------------|
 | Gemini     | `gemini`               | `gemini-2.5-flash-preview-05-20`, `gemini-2.5-pro-preview-05-06`, `gemini-2.0-flash`, `gemini-2.0-flash-lite`, `gemini-1.5-flash`, `gemini-1.5-flash-8b`,`gemini-1.5-pro`| `GEMINI_API_KEY` |
-| GPT        | `gpt`                  | coming soon... | `OPENAI_API_KEY`|
+| GPT        | `gpt`                  | `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano`, `gpt-4.5-preview`, `gpt-4o`, `gpt-4o-mini` | `OPENAI_API_KEY`|
 | Claude     | `claude`               | coming soon... | `ANTHROPIC_API_KEY`|
+| Ollama     | `ollama`               | `llama3`, `llama2`, `mistral`, `mixtral` coming soon... | `OLLAMA_API_KEY`|
+
+## Prompt Types for LLM Translators
+
+When using LLM translators, you can specify different prompt types to tailor the translation style and output. The available prompt types are designed to suit various translation needs, from formal translations to more creative styles like romantic or poetic translations.
 
 These are the available prompt types:
 
