@@ -479,6 +479,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#docker-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Deployment
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -861,6 +870,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#docker-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Deployment
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1032,12 +1050,37 @@
 <td>poetic</td>
 <td>Poetic Translation</td>
 </tr>
+<tr>
+<td>custom</td>
+<td>Custom Prompt</td>
+</tr>
 </tbody>
 </table>
-<div class="admonition note">
-<p class="admonition-title">We are working on costum prompts, so stay tuned for updates!</p>
-<p>It will probably a paramter in the <code>initialize_translator</code> function to pass a custom prompt.</p>
-</div>
+<p>If you choose <code>custom</code>, you can provide your own rule definiton as a string in the <code>custom_prompt</code> parameter when initializing the translator.</p>
+<div class="highlight"><span class="filename">Custom Prompt Example</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">easy_nlp_translate</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize_translator</span>
+
+<span class="c1"># Initialize the translator with a custom prompt</span>
+<span class="n">translator</span> <span class="o">=</span> <span class="n">initialize_translator</span><span class="p">(</span>
+    <span class="n">translator_name</span><span class="o">=</span><span class="s2">&quot;gemini&quot;</span><span class="p">,</span> 
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gemini-1.5-pro&quot;</span><span class="p">,</span>
+    <span class="n">source_lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> 
+    <span class="n">target_lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
+    <span class="n">prompt_type</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+    <span class="n">custom_prompt</span><span class="o">=</span><span class="s2">&quot;Translate the text into German with a friendly tone.&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="docker-deployment">Docker Deployment</h2>
+<p>Keep in mind if you want to use the package in a docker container while using <code>mbart</code>, you need to use CMD instead of ENTRYPOINT in your Dockerfile to avoid issues with the <code>mbart</code> model. This is due to the reason that huggingface transformers need to be run in a subprocess for downloading the model files correctly.</p>
+<div class="highlight"><span class="filename">Dockerfile Example</span><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.11-slim</span>
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>easy-nlp-translate
+
+<span class="k">COPY</span><span class="w"> </span>your_script.py<span class="w"> </span>.
+
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;your_script.py&quot;</span><span class="p">]</span>
+</code></pre></div>
 
 
 

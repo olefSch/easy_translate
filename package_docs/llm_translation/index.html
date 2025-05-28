@@ -1351,7 +1351,7 @@
 
 
 <h3 id="easy_nlp_translate.llm_provider.GeminiTranslator.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">costum_prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
 
 </h3>
 
@@ -1435,6 +1435,22 @@ Defaults to None, implying auto-detection will be attempted.</p>
             </td>
             <td>
                   <code>&#39;default&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>costum_prompt</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A custom prompt to use if the prompt type is "custom". Defaults to None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1834,7 +1850,7 @@ when required, or prompt rendering fails.</p>
 
 
 <h3 id="easy_nlp_translate.llm_provider.GPTTranslator.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">costum_prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
 
 </h3>
 
@@ -1918,6 +1934,22 @@ Defaults to None, implying auto-detection will be attempted.</p>
             </td>
             <td>
                   <code>&#39;default&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>costum_prompt</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A custom prompt to use if the prompt type is "custom". Defaults to None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -2318,7 +2350,7 @@ inheriting from LLMTranslator.</p>
 
 
 <h3 id="easy_nlp_translate.llm_provider.ClaudeTranslator.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">custom_prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
 
 </h3>
 
@@ -2402,6 +2434,22 @@ optional source language, and prompt type.</p>
             </td>
             <td>
                   <code>&#39;default&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>custom_prompt</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A custom prompt to use if the prompt type is "custom". Defaults to None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -2802,7 +2850,7 @@ inheriting from LLMTranslator.</p>
 
 
 <h3 id="easy_nlp_translate.llm_provider.OllamaTranslator.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">costum_prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
 
 </h3>
 
@@ -2885,6 +2933,22 @@ inheriting from LLMTranslator.</p>
             </td>
             <td>
                   <code>&#39;default&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>costum_prompt</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A custom prompt to use if the prompt type is "custom". Defaults to None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
