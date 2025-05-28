@@ -208,3 +208,62 @@ def test_gpt_translator_wrong_model_name():
         )
 
     assert "Model 'invalid-model-name' is not available." in str(excinfo.value)
+
+
+# --- CLAUDE TESTS ---
+def test_claude_translator_with_default_model():
+    translator = initialize_translator(
+        translator_name="claude",
+        model_name="claude-3-5-haiku-latest",
+        target_lang="de",
+        source_lang="en",
+    )
+
+    text = "This is a dog."
+    translated_text = translator.translate(text)
+
+    assert isinstance(translated_text, str)
+    assert translated_text != ""
+
+
+def test_claude_translator_with_no_input_language():
+    translator = initialize_translator(
+        translator_name="claude",
+        model_name="claude-3-5-haiku-latest",
+        target_lang="de",
+    )
+
+    text = "This is a dog."
+    translated_text = translator.translate(text)
+
+    assert isinstance(translated_text, str)
+    assert translated_text != ""
+
+
+def test_claude_translator_with_custom_prompt():
+    translator = initialize_translator(
+        translator_name="claude",
+        model_name="claude-3-5-haiku-latest",
+        source_lang="en",
+        target_lang="de",
+        prompt_type="romantic",
+        temperature=0.7,
+    )
+
+    text = "This is a dog."
+    translated_text = translator.translate(text)
+
+    assert isinstance(translated_text, str)
+    assert translated_text != ""
+
+
+def test_claude_translator_wrong_model_name():
+    with pytest.raises(ValueError) as excinfo:
+        initialize_translator(
+            translator_name="claude",
+            model_name="invalid-model-name",
+            target_lang="de",
+            source_lang="en",
+        )
+
+    assert "Model 'invalid-model-name' is not available." in str(excinfo.value)

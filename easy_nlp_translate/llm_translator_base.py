@@ -29,6 +29,7 @@ class LLMTranslator(TranslatorBase):
         source_lang: Optional[str] = None,
         prompt_type: str = "default",
         temperature: float = 0.7,
+        max_tokens: int = 1000,
     ):
         """
         Initializes the LLMTranslator with a model name, target language, optional source language, and prompt type.
@@ -40,10 +41,13 @@ class LLMTranslator(TranslatorBase):
                 Defaults to None, implying auto-detection will be attempted.
             prompt_type (str): The type of prompt to use for the translation. Defaults to "default".
             temperature (float): The temperature for the model's responses. Defaults to 0.7.
+            max_tokens (int): The maximum number of tokens to generate in the response. Defaults to 1000.
         """
         super().__init__(target_lang, source_lang)
 
         self._validate_model_name(model_name)
+        self._validate_max_tokens(max_tokens)
+        self._validate_temperature(temperature)
         self.model_name = model_name
         self.credentials = self._get_credentials()
         self.model = self._init_model()
@@ -57,6 +61,29 @@ class LLMTranslator(TranslatorBase):
 
         self.prompt: Template = self._init_prompt()
         self.temperature = temperature
+        self.max_tokens = max_tokens
+
+    def _validate_temperature(self, temperature: float):
+        """
+        Validates the temperature value.
+        Args:
+            temperature (float): The temperature to validate.
+        Raises:
+            ValueError: If temperature is not between 0 and 1.
+        """
+        if not (0 <= temperature <= 1):
+            raise ValueError("Temperature must be between 0 and 1.")
+
+    def _validate_max_tokens(self, max_tokens: int):
+        """
+        Validates the maximum number of tokens.
+        Args:
+            max_tokens (int): The maximum number of tokens to validate.
+        Raises:
+            ValueError: If max_tokens is less than or equal to 0.
+        """
+        if max_tokens <= 0:
+            raise ValueError("max_tokens must be greater than 0.")
 
     def _get_prompt_template(self, prompt_path: Path) -> Template:
         """

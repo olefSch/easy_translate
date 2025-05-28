@@ -71,6 +71,34 @@ def test_init_with_invalid_prompt_style(patched_llm_translator_class):
     )
 
 
+def test_init_wrong_temperature(patched_llm_translator_class):
+    """
+    Test the init functionality of the LLMTranslator class.
+    With wrong temperature value.
+    """
+    with pytest.raises(ValueError) as excinfo:
+        patched_llm_translator_class(
+            model_name="model_a",
+            target_lang="en",
+            temperature=-0.5,
+        )
+    assert "Temperature must be between 0 and 1." in str(excinfo.value)
+
+
+def test_init_wrong_max_tokens(patched_llm_translator_class):
+    """
+    Test the init functionality of the LLMTranslator class.
+    With wrong max_tokens value.
+    """
+    with pytest.raises(ValueError) as excinfo:
+        patched_llm_translator_class(
+            model_name="model_a",
+            target_lang="en",
+            max_tokens=0,
+        )
+    assert "max_tokens must be greater than 0." in str(excinfo.value)
+
+
 # --- render prompt
 def test_render_prompt(patched_llm_translator_class):
     """

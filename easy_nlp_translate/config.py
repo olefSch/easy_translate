@@ -182,3 +182,12 @@ available_models_openai = [
     "gpt-4o",
     "gpt-4o-mini",
 ]
+
+available_models_claude = [
+    "claude-opus-4-0",
+    "claude-sonnet-4-0",
+    "claude-3-7-sonnet-latest",
+    "claude-3-5-sonnet-latest",
+    "claude-3-5-haiku-latest",
+    "claude-3-opus-latest",
+]
