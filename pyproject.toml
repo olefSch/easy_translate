@@ -46,7 +46,7 @@ dev = [
 pythonpath = "easy_nlp_translate"
 
 [tool.setuptools]
-packages = ["easy_nlp_translate"]
+packages = ["easy_nlp_translate*"]
 
 [[tool.uv.index]]
 name = "pypi"
