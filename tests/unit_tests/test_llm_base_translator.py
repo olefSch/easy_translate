@@ -66,7 +66,7 @@ def test_init_with_invalid_prompt_style(patched_llm_translator_class):
             prompt_type="invalid_prompt_style",
         )
     assert (
-        "Prompt type 'invalid_prompt_style' is not available. Avaliable types are: ['default', 'formal', 'translate_and_summarize', 'formal_translate_and_summarize', 'romantic', 'poetic']"
+        "Prompt type 'invalid_prompt_style' is not available. Avaliable types are: "
         in str(excinfo.value)
     )
 
@@ -136,6 +136,25 @@ def test_render_prompt_without_source_lang(patched_llm_translator_class):
     assert text_to_translate in rendered_prompt
     assert "English" in rendered_prompt
     assert "German" in rendered_prompt
+
+
+def test_reder_prompt_with_custom_prompt(patched_llm_translator_class):
+    """
+    Test the render_prompt method of the LLMTranslator class.
+    With custom prompt.
+    """
+    translator = patched_llm_translator_class(
+        model_name="model_a",
+        target_lang="en",
+        source_lang="de",
+        prompt_type="custom",
+        costum_prompt="translate like Lothar Matthäus",
+    )
+
+    text_to_translate = "Hallo Welt"
+    rendered_prompt = translator._render_prompt(text_to_translate)
+
+    assert "translate like Lothar Matthäus" in rendered_prompt
 
 
 # --- translate

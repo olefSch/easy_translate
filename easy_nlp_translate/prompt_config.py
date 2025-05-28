@@ -25,6 +25,7 @@ class PromptStyle(PyEnum):
         "romantic_translation.jinja",
     )
     POETIC = ("poetic", "Poetic Translation", "poetic_translation.jinja")
+    CUSTOM = ("custom", "Custom Translation", "custom_prompt.jinja")
 
     def __init__(self, code: str, description: str, template_filename: str):
         """

@@ -88,6 +88,38 @@ These are the available prompt types:
 | formal_translate_and_summarize | Formal Summarize and Translate   |
 | romantic                         | Romantic Translation             |
 | poetic                           | Poetic Translation               |
+| custom                          | Custom Prompt                   |
 
-!!! note "We are working on costum prompts, so stay tuned for updates!"
-    It will probably a paramter in the `initialize_translator` function to pass a custom prompt.
+If you choose `custom`, you can provide your own rule definiton as a string in the `custom_prompt` parameter when initializing the translator.
+
+```python title="Custom Prompt Example"
+from easy_nlp_translate import initialize_translator
+
+# Initialize the translator with a custom prompt
+translator = initialize_translator(
+    translator_name="gemini", 
+    model_name="gemini-1.5-pro",
+    source_lang="en", 
+    target_lang="de",
+    prompt_type="custom",
+    custom_prompt="Translate the text into German with a friendly tone."
+)
+```
+## Docker Deployment
+
+Keep in mind if you want to use the package in a docker container while using `mbart`, you need to use CMD instead of ENTRYPOINT in your Dockerfile to avoid issues with the `mbart` model. This is due to the reason that huggingface transformers need to be run in a subprocess for downloading the model files correctly.
+
+```dockerfile title="Dockerfile Example"
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN pip install easy-nlp-translate
+
+COPY your_script.py .
+
+CMD ["python", "your_script.py"]
+```
+
+
+

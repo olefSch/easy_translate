@@ -26,6 +26,7 @@ class GeminiTranslator(LLMTranslator):
         target_lang: str,
         source_lang: Optional[str] = None,
         prompt_type: str = "default",
+        costum_prompt: Optional[str] = None,
         temperature: float = 0.7,
         max_tokens: int = 1000,
     ):
@@ -38,6 +39,7 @@ class GeminiTranslator(LLMTranslator):
             source_lang (Optional[str]): The source language code for translation (e.g., 'en' for English).
                 Defaults to None, implying auto-detection will be attempted.
             prompt_type (str): The type of prompt to use for the translation. Defaults to "default".
+            costum_prompt (Optional[str]): A custom prompt to use if the prompt type is "custom". Defaults to None.
             temperature (float): The temperature for the model's responses. Defaults to 0.7.
             max_tokens (int): The maximum number of tokens to generate in the response. Defaults to 1000.
         """
@@ -46,6 +48,7 @@ class GeminiTranslator(LLMTranslator):
             target_lang,
             source_lang,
             prompt_type,
+            costum_prompt,
             temperature,
             max_tokens,
         )
