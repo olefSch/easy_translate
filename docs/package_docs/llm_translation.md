@@ -6,4 +6,4 @@
 
 ::: easy_nlp_translate.llm_provider.ClaudeTranslator
 
-more models coming soon...
+::: easy_nlp_translate.llm_provider.OllamaTranslator
