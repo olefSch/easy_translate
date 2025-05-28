@@ -1,4 +1,5 @@
 import pytest
+import os
 from easy_nlp_translate import initialize_translator
 
 
@@ -267,3 +268,78 @@ def test_claude_translator_wrong_model_name():
         )
 
     assert "Model 'invalid-model-name' is not available." in str(excinfo.value)
+
+
+# --- OLLAMA TESTS ---
+
+skip_ollama_tests_in_ci = pytest.mark.skipif(
+    os.getenv("CI", "false").lower() in ("true", "1"),
+    reason="Ollama tests are skipped in CI environment",
+)
+
+
+@skip_ollama_tests_in_ci
+def test_ollama_translator_with_default_model():
+    translator = initialize_translator(
+        translator_name="ollama",
+        model_name="llama3.2:latest",
+        target_lang="de",
+        source_lang="en",
+    )
+
+    text = "This is a dog."
+    translated_text = translator.translate(text)
+
+    assert isinstance(translated_text, str)
+    assert translated_text != ""
+
+
+@skip_ollama_tests_in_ci
+def test_ollama_translator_with_no_input_language():
+    translator = initialize_translator(
+        translator_name="ollama",
+        model_name="llama3.2:latest",
+        target_lang="de",
+    )
+
+    text = "This is a dog."
+    translated_text = translator.translate(text)
+
+    assert isinstance(translated_text, str)
+    assert translated_text != ""
+
+
+@skip_ollama_tests_in_ci
+def test_ollama_translator_with_custom_prompt():
+    translator = initialize_translator(
+        translator_name="ollama",
+        model_name="llama3.2:latest",
+        source_lang="en",
+        target_lang="de",
+        prompt_type="romantic",
+        temperature=0.7,
+    )
+
+    text = "This is a dog."
+    translated_text = translator.translate(text)
+
+    assert isinstance(translated_text, str)
+    assert translated_text != ""
+
+
+@skip_ollama_tests_in_ci
+def test_ollama_translator_wrong_model_name():
+    with pytest.raises(ValueError) as excinfo:
+        initialize_translator(
+            translator_name="ollama",
+            model_name="invalid-model-name",
+            target_lang="de",
+            source_lang="en",
+        )
+
+    assert "Model 'invalid-model-name' is not available." in str(excinfo.value)
+    assert "Available models are: " in str(excinfo.value)
+    assert (
+        "If you haven't installed the model yet, please run `ollama pull model`, but ensure you have Ollama installed and running."
+        in str(excinfo.value)
+    )

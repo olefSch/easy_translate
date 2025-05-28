@@ -1,3 +1,6 @@
+---
+description: Easy NLP Translate is a Python library designed to simplify text translation. It offers an easy-to-use interface for high-quality results, leveraging both carefully evaluated local transformer models and powerful Large Language Models (LLMs) from popular providers. Customize your translations with flexible prompt options. Requires Python 3.11 or 3.12.---
+---
 # Easy NLP Translate - A Simple and Efficient Translation Library
 
 This library provides an easy-to-use interface for translating text using both local transformer models and large language models (LLMs) from popular providers. It is designed to simplify the translation process while ensuring high-quality results through careful model evaluation also shown in the documantion.
