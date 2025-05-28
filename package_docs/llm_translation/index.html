@@ -549,6 +549,66 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator" class="md-nav__link">
+    <span class="md-ellipsis">
+      GPTTranslator
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GPTTranslator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.AVAILABLE_MODELS" class="md-nav__link">
+    <span class="md-ellipsis">
+      AVAILABLE_MODELS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __init__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.detect_language" class="md-nav__link">
+    <span class="md-ellipsis">
+      detect_language
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.translate" class="md-nav__link">
+    <span class="md-ellipsis">
+      translate
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.translate_batch" class="md-nav__link">
+    <span class="md-ellipsis">
+      translate_batch
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -909,6 +969,66 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator" class="md-nav__link">
+    <span class="md-ellipsis">
+      GPTTranslator
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GPTTranslator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.AVAILABLE_MODELS" class="md-nav__link">
+    <span class="md-ellipsis">
+      AVAILABLE_MODELS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __init__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.detect_language" class="md-nav__link">
+    <span class="md-ellipsis">
+      detect_language
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.translate" class="md-nav__link">
+    <span class="md-ellipsis">
+      translate
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy_nlp_translate.llm_provider.GPTTranslator.translate_batch" class="md-nav__link">
+    <span class="md-ellipsis">
+      translate_batch
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -991,7 +1111,7 @@
 
 
 <h3 id="easy_nlp_translate.llm_provider.GeminiTranslator.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span></code>
 
 </h3>
 
@@ -1075,6 +1195,22 @@ Defaults to None, implying auto-detection will be attempted.</p>
             </td>
             <td>
                   <code>&#39;default&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>temperature</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The temperature for the model's responses. Defaults to 0.7.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.7</code>
             </td>
           </tr>
       </tbody>
@@ -1306,6 +1442,473 @@ when required, or prompt rendering fails.</p>
 
 
 <h3 id="easy_nlp_translate.llm_provider.GeminiTranslator.translate_batch" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">translate_batch</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Translate a batch of texts from source language to target language.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>texts</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of texts to be translated.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>list</code></td>            <td>
+                  <code><span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of translated texts.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="easy_nlp_translate.llm_provider.GPTTranslator" class="doc doc-heading">
+            <code>GPTTranslator</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="easy_nlp_translate.llm_provider.GPTTranslator.AVAILABLE_MODELS" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">AVAILABLE_MODELS</span> <span class="o">=</span> <span class="n">available_models_openai</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>A base class for LLM-based translators, inheriting from TranslatorBase.</p>
+
+    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="easy_nlp_translate.llm_provider.GPTTranslator.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">target_lang</span><span class="p">,</span> <span class="n">source_lang</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt_type</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initializes the LLMTranslator with a model name, target language, optional source language, and prompt type.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>model_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the LLM model to use for translation.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>target_lang</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The target language code for translation (e.g., 'fr' for French).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>source_lang</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The source language code for translation (e.g., 'en' for English).
+Defaults to None, implying auto-detection will be attempted.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>prompt_type</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The type of prompt to use for the translation. Defaults to "default".</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;default&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>temperature</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The temperature for the model's responses. Defaults to 0.7.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.7</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="easy_nlp_translate.llm_provider.GPTTranslator.detect_language" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">detect_language</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Detects the language of the given text using langdetect.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>text</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The text whose language is to be detected.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The detected language code (e.g., 'en', 'fr').</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the text is empty or invalid for detection.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="LangDetectException">LangDetectException</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If language detection by the <code>langdetect</code>
+library fails for other reasons (e.g., text too short, no features).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the detected language is not in <code>self.LANGUAGE_CODES</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="easy_nlp_translate.llm_provider.GPTTranslator.translate" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">translate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Translates the given text using the configured LLM.</p>
+<p>Orchestrates the translation process by:
+1. Validating the input text.
+2. Rendering the appropriate prompt (including language detection if needed).
+3. Sending the prompt to the LLM via <code>_generate</code>.
+4. Post-processing the LLM's response via <code>_post_process</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>text</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The text to be translated.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The translated text.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If input text validation fails, language detection fails
+when required, or prompt rendering fails.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="easy_nlp_translate.llm_provider.GPTTranslator.translate_batch" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">translate_batch</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span></code>
 
 </h3>
