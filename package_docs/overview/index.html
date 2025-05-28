@@ -247,7 +247,7 @@
           
   
   
-  Docs
+  Translation
 
         </a>
       </li>
@@ -372,7 +372,7 @@
   
   
   <span class="md-ellipsis">
-    Docs
+    Translation
     
   </span>
   
@@ -383,7 +383,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Docs
+            Translation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -921,7 +921,92 @@
 </code></pre></div>
 <p>You can also translate multiple texts in a batch if the translator supports it (e.g., the <code>translate_batch</code> method). Please check the specific translator's documentation for availability and usage of batch translation.</p>
 <h2 id="llm-translator-initialization">LLM Translator Initialization</h2>
-<p>comming ...</p>
+<p>There is also the option to initialize the translator using LLMs like Gemini, GPT, or Claude. This is useful for more complex translation tasks that require understanding context or nuances in the text and to use prompts based on the promt library we offer.</p>
+<div class="highlight"><span class="filename">Initialize LLM Translator</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">easy_nlp_translate</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize_translator</span>
+
+<span class="c1"># Initialize the LLM translator using its ID</span>
+<span class="n">translator</span> <span class="o">=</span> <span class="n">initialize_translator</span><span class="p">(</span>
+    <span class="n">translator_name</span><span class="o">=</span><span class="s2">&quot;gemini&quot;</span><span class="p">,</span> 
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gemini-1.5-pro&quot;</span><span class="p">,</span>
+    <span class="n">source_lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> 
+    <span class="n">target_lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
+    <span class="n">prompt_type</span><span class="o">=</span><span class="s2">&quot;formal&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">LLM Translator Parameters</p>
+<p>The parameters for LLM translators may include <code>model_name</code>, <code>prompt_type</code>, and others specific to the LLM being used. Refer to the documentation for each LLM translator for more details.</p>
+</div>
+<p>These are the available llm translators:</p>
+<table>
+<thead>
+<tr>
+<th>Translator</th>
+<th>ID (<code>translator_name</code>)</th>
+<th>Models</th>
+<th>API_KEY env var</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemini</td>
+<td><code>gemini</code></td>
+<td><code>gemini-2.5-flash-preview-05-20</code>, <code>gemini-2.5-pro-preview-05-06</code>, <code>gemini-2.0-flash</code>, <code>gemini-2.0-flash-lite</code>, <code>gemini-1.5-flash</code>, <code>gemini-1.5-flash-8b</code>,<code>gemini-1.5-pro</code></td>
+<td><code>GEMINI_API_KEY</code></td>
+</tr>
+<tr>
+<td>GPT</td>
+<td><code>gpt</code></td>
+<td>coming soon...</td>
+<td><code>OPENAI_API_KEY</code></td>
+</tr>
+<tr>
+<td>Claude</td>
+<td><code>claude</code></td>
+<td>coming soon...</td>
+<td><code>ANTHROPIC_API_KEY</code></td>
+</tr>
+</tbody>
+</table>
+<p>These are the available prompt types:</p>
+<table>
+<thead>
+<tr>
+<th>Prompt Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>default</td>
+<td>Basic Translation</td>
+</tr>
+<tr>
+<td>formal</td>
+<td>Formal Translation</td>
+</tr>
+<tr>
+<td>translate_and_summarize</td>
+<td>Summarize and Translate</td>
+</tr>
+<tr>
+<td>formal_translate_and_summarize</td>
+<td>Formal Summarize and Translate</td>
+</tr>
+<tr>
+<td>romantic</td>
+<td>Romantic Translation</td>
+</tr>
+<tr>
+<td>poetic</td>
+<td>Poetic Translation</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">We are working on costum prompts, so stay tuned for updates!</p>
+<p>It will probably a paramter in the <code>initialize_translator</code> function to pass a custom prompt.</p>
+</div>
 
 
 
