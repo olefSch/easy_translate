@@ -28,6 +28,7 @@ class LLMTranslator(TranslatorBase):
         target_lang: str,
         source_lang: Optional[str] = None,
         prompt_type: str = "default",
+        temperature: float = 0.7,
     ):
         """
         Initializes the LLMTranslator with a model name, target language, optional source language, and prompt type.
@@ -37,6 +38,8 @@ class LLMTranslator(TranslatorBase):
             target_lang (str): The target language code for translation (e.g., 'fr' for French).
             source_lang (Optional[str]): The source language code for translation (e.g., 'en' for English).
                 Defaults to None, implying auto-detection will be attempted.
+            prompt_type (str): The type of prompt to use for the translation. Defaults to "default".
+            temperature (float): The temperature for the model's responses. Defaults to 0.7.
         """
         super().__init__(target_lang, source_lang)
 
@@ -53,6 +56,7 @@ class LLMTranslator(TranslatorBase):
             )
 
         self.prompt: Template = self._init_prompt()
+        self.temperature = temperature
 
     def _get_prompt_template(self, prompt_path: Path) -> Template:
         """

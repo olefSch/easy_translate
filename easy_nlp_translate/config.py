@@ -173,3 +173,12 @@ available_models_gemini = [
     "gemini-1.5-flash-8b",
     "gemini-1.5-pro",
 ]
+
+available_models_openai = [
+    "gpt-4.1",
+    "gpt-4.1-mini",
+    "gpt-4.1-nano",
+    "gpt-4.5-preview",
+    "gpt-4o",
+    "gpt-4o-mini",
+]
