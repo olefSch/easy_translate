@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "easy-nlp-translate"
-version = "0.4.1"
+version = "0.4.2"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11, <=3.12"
@@ -47,6 +47,11 @@ pythonpath = "easy_nlp_translate"
 
 [tool.setuptools.packages.find]
 include = ["easy_nlp_translate*"]
+
+[tool.setuptools.package-data]
+"easy_nlp_translate" = [
+    "prompts/*.jinja",
+]
 
 [[tool.uv.index]]
 name = "pypi"
