@@ -3,7 +3,12 @@ from typing import Any
 
 from .translator_base import TranslatorBase
 from .huggingface_models import MBARTTranslator
-from .llm_provider import GeminiTranslator, GPTTranslator, ClaudeTranslator
+from .llm_provider import (
+    GeminiTranslator,
+    GPTTranslator,
+    ClaudeTranslator,
+    OllamaTranslator,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +17,7 @@ TRANSLATOR_REGISTRY: dict[str, type[TranslatorBase]] = {
     "gemini": GeminiTranslator,
     "gpt": GPTTranslator,
     "claude": ClaudeTranslator,
+    "ollama": OllamaTranslator,
 }
 
 
