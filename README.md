@@ -19,14 +19,14 @@ Translation library that provides an easy-to-use interface for translating text 
 
 ## 🚀 Features
 
-- Translation with a local transformer model selected based on our evaltuaion
-- LLM-Translation using common provider with a costum prompt or based on our prompt library
+- Translation with a local transformer model selected based on our evaluation
+- LLM-Translation using common provider with a custom prompt or based on our prompt library
 
 ## 📦 Installation & Instructions
 
-### Installion
+### Installation
 
-Install the package from pypi:
+Install the package from PyPi:
 
 ```bash
 pip install easy-nlp-translate
