@@ -4,10 +4,11 @@
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Huggingface](https://img.shields.io/badge/🤗%20Hugging%20Face-Model-blue?style=for-the-badge)
-![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-black?logo=PyTorch&style=for-the-badge)
 ![Open AI](https://img.shields.io/badge/-OpenAI-93f6ef?style=for-the-badge&logo=openai&logoColor=white)
-![Gemini](https://img.shields.io/badge/Google-Gemini-blue?style=for-the-badge&logo=google&logoColor=white)
-![Antrophic](https://img.shields.io/badge/Claude%20Sonnet-blueviolet?style=for-the-badge)
+![Gemini](https://img.shields.io/badge/Gemini-blue?style=for-the-badge&logo=google&logoColor=white)
+![Antrophic](https://img.shields.io/badge/Claude%20Sonnet-blueviolet?style=for-the-badge&logo=anthropic)
+![Ollama](https://img.shields.io/badge/-Ollama-000000?logo=ollama&logoColor=white&style=for-the-badge)
 
 ## Docs
 Here is the link to the [documentation](https://easy-nlp-translate.de).
