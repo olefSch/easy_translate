@@ -962,7 +962,7 @@
 </code></pre></div>
 <p>You can also translate multiple texts in a batch if the translator supports it (e.g., the <code>translate_batch</code> method). Please check the specific translator's documentation for availability and usage of batch translation.</p>
 <h2 id="llm-translator-initialization">LLM Translator Initialization</h2>
-<p>There is also the option to initialize the translator using LLMs like Gemini, GPT, or Claude. This is useful for more complex translation tasks that require understanding context or nuances in the text and to use prompts based on the promt library we offer.</p>
+<p>There is also the option to initialize the translator using LLMs like Gemini, GPT, or Claude. This is useful for more complex translation tasks that require understanding context or nuances in the text and to use prompts based on the prompt library we offer.</p>
 <div class="highlight"><span class="filename">Initialize LLM Translator</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">easy_nlp_translate</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize_translator</span>
 
 <span class="c1"># Initialize the LLM translator using its ID</span>
@@ -978,7 +978,7 @@
 <p class="admonition-title">LLM Translator Parameters</p>
 <p>The parameters for LLM translators may include <code>model_name</code>, <code>prompt_type</code>, and others specific to the LLM being used. Refer to the documentation for each LLM translator for more details.</p>
 </div>
-<p>These are the available llm translators:</p>
+<p>These are the available LLM translators:</p>
 <table>
 <thead>
 <tr>
@@ -1056,7 +1056,7 @@
 </tr>
 </tbody>
 </table>
-<p>If you choose <code>custom</code>, you can provide your own rule definiton as a string in the <code>custom_prompt</code> parameter when initializing the translator.</p>
+<p>If you choose <code>custom</code>, you can provide your own rule definition as a string in the <code>custom_prompt</code> parameter when initializing the translator.</p>
 <div class="highlight"><span class="filename">Custom Prompt Example</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">easy_nlp_translate</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize_translator</span>
 
 <span class="c1"># Initialize the translator with a custom prompt</span>
