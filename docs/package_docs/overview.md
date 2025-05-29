@@ -46,7 +46,7 @@ You can also translate multiple texts in a batch if the translator supports it (
 
 ## LLM Translator Initialization
 
-There is also the option to initialize the translator using LLMs like Gemini, GPT, or Claude. This is useful for more complex translation tasks that require understanding context or nuances in the text and to use prompts based on the promt library we offer.
+There is also the option to initialize the translator using LLMs like Gemini, GPT, or Claude. This is useful for more complex translation tasks that require understanding context or nuances in the text and to use prompts based on the prompt library we offer.
 
 ```python title="Initialize LLM Translator"
 from easy_nlp_translate import initialize_translator
@@ -64,8 +64,7 @@ translator = initialize_translator(
 !!! note "LLM Translator Parameters"
     The parameters for LLM translators may include `model_name`, `prompt_type`, and others specific to the LLM being used. Refer to the documentation for each LLM translator for more details.
 
-
-These are the available llm translators:
+These are the available LLM translators:
 
 | Translator | ID (`translator_name`) | Models | API_KEY env var |
 |------------|------------------------|--------|-------------------|
@@ -90,7 +89,7 @@ These are the available prompt types:
 | poetic                           | Poetic Translation               |
 | custom                          | Custom Prompt                   |
 
-If you choose `custom`, you can provide your own rule definiton as a string in the `custom_prompt` parameter when initializing the translator.
+If you choose `custom`, you can provide your own rule definition as a string in the `custom_prompt` parameter when initializing the translator.
 
 ```python title="Custom Prompt Example"
 from easy_nlp_translate import initialize_translator
@@ -105,6 +104,7 @@ translator = initialize_translator(
     custom_prompt="Translate the text into German with a friendly tone."
 )
 ```
+
 ## Docker Deployment
 
 Keep in mind if you want to use the package in a docker container while using `mbart`, you need to use CMD instead of ENTRYPOINT in your Dockerfile to avoid issues with the `mbart` model. This is due to the reason that huggingface transformers need to be run in a subprocess for downloading the model files correctly.
@@ -120,6 +120,3 @@ COPY your_script.py .
 
 CMD ["python", "your_script.py"]
 ```
-
-
-
